@@ -1,0 +1,50 @@
+Min Objective Score: Usability Score - 0 to 1,0.0
+Min Objective Score: Drag Force,16.94220542907715
+Min Objective Score: Knee Angle Error,0.0
+Min Objective Score: Hip Angle Error,38.970401763916016
+Min Objective Score: Arm Angle Error,21.790321350097656
+Min Objective Score: Cosine Distance to Embedding,0.00012680888175964355
+Min Objective Score: Mass,3.7619152069091797
+Min Objective Score: Planar Compliance,0.0
+Min Objective Score: Transverse Compliance,0.0
+Min Objective Score: Eccentric Compliance,0.019904881715774536
+Mean Objective Score: Usability Score - 0 to 1,0.32021844387054443
+Mean Objective Score: Drag Force,21.956247329711914
+Mean Objective Score: Knee Angle Error,7.446118354797363
+Mean Objective Score: Hip Angle Error,78.61183166503906
+Mean Objective Score: Arm Angle Error,98.79842376708984
+Mean Objective Score: Cosine Distance to Embedding,0.0008722011116333306
+Mean Objective Score: Mass,9.97412395477295
+Mean Objective Score: Planar Compliance,0.08348866552114487
+Mean Objective Score: Transverse Compliance,0.3571416735649109
+Mean Objective Score: Eccentric Compliance,0.4061916470527649
+Constraint Violation Rate: Planar Safety Factor,0.267
+Constraint Violation Rate: Eccentric Safety Factor,0.217
+Constraint Violation Rate: Saddle height too small,0.002
+Constraint Violation Rate: Seat post too short,0.014
+Constraint Violation Rate: Head tube lower extension too great,0.0
+Constraint Violation Rate: Head tube length too great,0.007
+Constraint Violation Rate: Certain parameters must be positive,0.156
+Constraint Violation Rate: Chain stay should be greater than wheel radius,0.018
+Constraint Violation Rate: Chain stay should be greater than BB,0.0
+Constraint Violation Rate: Seat stay should be greater than wheel radius,0.0
+Constraint Violation Rate: Down tube must reach head tube,0.0
+Constraint Violation Rate: The pedal shouldn't intersect the front wheel,0.025
+Constraint Violation Rate: The crank shouldn't hit the ground when it is in its lower position,0.0
+Constraint Violation Rate: RGB value should be less than 255,0.0
+Constraint Violation Rate: Predicted Frame Validity,0.0
+Mean Constraint Violation Magnitude: Planar Safety Factor,0.06916137039661407
+Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.06943632662296295
+Mean Constraint Violation Magnitude: Saddle height too small,0.029676087200641632
+Mean Constraint Violation Magnitude: Seat post too short,0.24828967452049255
+Mean Constraint Violation Magnitude: Head tube lower extension too great,0.0
+Mean Constraint Violation Magnitude: Head tube length too great,0.04337288811802864
+Mean Constraint Violation Magnitude: Certain parameters must be positive,0.07365681976079941
+Mean Constraint Violation Magnitude: Chain stay should be greater than wheel radius,0.14308828115463257
+Mean Constraint Violation Magnitude: Chain stay should be greater than BB,0.0
+Mean Constraint Violation Magnitude: Seat stay should be greater than wheel radius,0.0
+Mean Constraint Violation Magnitude: Down tube must reach head tube,0.0
+Mean Constraint Violation Magnitude: The pedal shouldn't intersect the front wheel,0.5699830055236816
+Mean Constraint Violation Magnitude: The crank shouldn't hit the ground when it is in its lower position,0.0
+Mean Constraint Violation Magnitude: RGB value should be less than 255,0.0
+Mean Constraint Violation Magnitude: Predicted Frame Validity,0.0

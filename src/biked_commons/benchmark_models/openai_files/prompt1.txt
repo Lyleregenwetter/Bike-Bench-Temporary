@@ -1,0 +1,5 @@
+I will ask you to create some bicycle designs. The bicycle designs are subject to a set of conditions: a text prompt, some rider dimensions, and a use case. 
+Each design is defined by 70 variables, which I will describe. Some of these are categorical variables, and I will provide you with the possible values for these variables. Others are continuous.
+I will describe the design variables shortly. 
+Designs are evaluated according to a set of 25 criteria. The first 10 are objectives, while the last 15 are constraints. 
+Here are the design variable descriptions and the evaluation criteria:

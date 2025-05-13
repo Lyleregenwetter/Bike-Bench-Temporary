@@ -1,0 +1,33 @@
+Descriptions of all objectives and constraints in the standard bike--bench multi-obejctive engineering design benchmark. 
+Some evaluation criteria are contingent on both the conditional information, while others are contingent on only the bike design. By convention, objectives are minimized at 0, with lower values being better. 
+Constraints are also minimized, with 0 being the critical value. Larger positive values being more constraint violating and larger magnitude negative values are more more constraint-satisfying.
+In general, once a constraint is satisfied, we no longer care about further minimizing the value. However, achieving constraints is critical because designs that violate constraints are invalid.
+
+General format is: 
+'evaluation criterion name': [criterion type] Description. 
+
+Usability Score: [Objective] The predicted 'usability,' as rated by a human, with 0 being the most usable and 1 being the least usable. Predicted by a regression model trained on human-collected ratings.
+Drag Force: [Objective] The predicted drag force in N incurred by the cyclist in a 10 m/s headwind, as predicted by a regression model trained on computational fluid dynamics simulation data.
+Knee Angle Error: [Objective] The difference between the minimum knee angle of the cyclist and the optimal reference range. May include a penalty term if the rider's geometry is completely incompatible with the bike. 
+Hip Angle Error: [Objective] The difference between the torso-to-upper-leg angle of the cyclist and the optimal reference range. May include a penalty term if the rider's geometry is completely incompatible with the bike.
+Arm Angle Error: [Objective] The difference between the torso-to-arm angle of the cyclist and the optimal reference range. May include a penalty term if the rider's geometry is completely incompatible with the bike.
+Cosine Distance to Embedding: [Objective] The cosine distance in the CLIP embedding space between the rendered bike image and the target text or image embedding.
+Mass: [Objective] The mass in kg of the bike frame, as predicted by a regression model trained on finite element analysis data.
+Planar Compliance: [Objective] A composite planar compliance score for the bike frame, as predicted by a regression model trained on finite element analysis data.
+Transverse Compliance: [Objective] A transverse compliance score for the bike frame, as predicted by a regression model trained on finite element analysis data.
+Eccentric Compliance: [Objective] A composite eccentric compliance score for the bike frame, as predicted by a regression model trained on finite element analysis data.
+Planar Safety Factor: [Constraint] Constraint quantified as 1.5 minus the safety factor under planar loading, as predicted by a regression model trained on finite element analysis data. 
+Eccentric Safety Factor: [Constraint] Constraint quantified as 1.5 minus the safety factor under eccentric loading, as predicted by a regression model trained on finite element analysis data.
+Saddle height too small: [Constraint] Constraint indicating that the saddle height collides with the top of the seat tube.
+Seat post too short: [Constraint] Constraint indicating that the seat post doesn't reach the seat tube given the prescribed saddle height.
+Head tube lower extension too great: [Constraint] Constraint indicating that the down tube doesn't properly intersect with the head tube.
+Head tube length too great: [Constraint] Constraint indicating that the head tube is so short that the top tube and down tube intersect.
+Certain parameters must be positive: [Constraint] Constraint indicating that at least one parameter that should be strictly positive is negative.
+Chain stay should be greater than wheel radius: [Constraint] Constraint indicating that the chain stay length is smaller than the wheel radius, creating a collision.
+Chain stay should be greater than BB: [Constraint] Constraint indicating that the vertical drop from the rear axle to bottom bracket is greater than the chain stay length, creating an impossibility. 
+Seat stay should be greater than wheel radius: [Constraint] Constraint indicating that the seat stay length is smaller than the wheel radius, creating a collision.
+Down tube must reach head tube: [Constraint] Constraint indicating that the down tube is too short to reach the head tube.
+The pedal shouldn't intersect the front wheel: [Constraint] Constraint indicating that the front wheel would intersect the pedal in its forward position, causing a collision when turning. 
+The crank shouldn't hit the ground when it is in its lower position: [Constraint] Constraint indicating that the crank hits the ground during its rotation.
+RGB value should be less than 255: [Constraint] Constraint indicating that frame RGB values were set at higher than 255.
+Predicted Frame Validity: [Constraint] Constraint indicating some abstract issue with the frame, as predicted by a classification model trained to identify CAD models that failed to regenerate. 

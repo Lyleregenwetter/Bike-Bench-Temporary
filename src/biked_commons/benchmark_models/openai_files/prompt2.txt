@@ -1,0 +1,5 @@
+I will also provide a dataset of existing bicycle designs. These are useful as a reference point, because it may be difficult to satisfy constraints and objectives if you deviate too far from the space of existing designs.
+I will also provide a set of objective scores for these bicycle designs. Since these criteria are dependent on the conditional information, each bike design is paired with a randomized condition set for the purpose of evaluation. 
+Thus, I will provide: 1) a text file with 10 rows of conditions, 2) a csv file with 10 rows of bikes and 70 columns of parameters, and 3) a csv file of 10 sets (rows) of 25 scores (columns). 
+
+Here are these files. Please have a look to try to gain an understanding of the design space and the evaluation criteria.

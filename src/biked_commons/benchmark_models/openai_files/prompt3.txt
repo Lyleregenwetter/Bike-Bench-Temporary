@@ -1,0 +1,5 @@
+Having examined the existing designs and the evaluation of these designs alongside their associated conditions, I hope you have gained an understanding of the design space and design objectives. 
+I will now ask you to create bicycle designs. Please deliberate on a strategy for creating high-performing designs that satisfy the constraints and objectives.
+I will provide you with 10 new conditions. Please create 10 unique bicycle design that satisfies the constraints and objectives. Important: You are not allowed to generate the same bike 10 times. 
+Each design must be unique! Please provide the designs in a 10x70 csv file. No index or headers. Only the 10x70 values. 
+Here are the 10 conditions. Remember! Every design must be unique. 

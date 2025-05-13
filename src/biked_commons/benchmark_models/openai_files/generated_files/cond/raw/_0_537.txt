@@ -1,0 +1,22 @@
+A practical way to generate high‐performing bike geometries under these multi‐objective, constrained conditions is:
+
+1. Anchor to Real Designs: Start from the nearest existing design (road, MTB or commuter) in the provided dataset, so that tube lengths, angles and diameters remain in a proven, feasible range.  
+2. Scale to Rider Dimensions: Adjust stack, seat‐tube length and saddle height to match the rider’s leg and torso lengths, ensuring no collision constraints (e.g. saddle vs. seat tube, pedal vs. front wheel) and maintaining optimal joint angles.  
+3. Material & Use Case Tuning: Choose wall thicknesses and tube diameters consistent with the frame material and use case (thicker walls for steel MTB, lighter walls for carbon road), to hit mass and compliance targets.  
+4. Aerodynamics & Accessories: For road bikes, opt for aerodynamic head tubes (type 0), wheel cutouts, and disc rims; for MTBs, use shock forks, wider bars, and thicker tires; for commuters, add fenders and optional racks.  
+5. Color & Components: Set RGB in the 0–255 range, matching marketing colors, and choose chain vs. belt, bottle mounts, cog counts and chainrings to suit the use case.  
+6. Constraint‐First Validation: After setting a candidate, quickly check all 15 geometric constraints (e.g. planar safety factor ≥ 1.5, chainstay > wheel radius, no negative lengths). Any violation is immediately corrected by local adjustment (e.g. lengthen a stay or increase drop).  
+7. Local Objective Refinement: Finally, lightly perturb tube diameters, fork offsets, and stem kinds to reduce drag, mass or compliance metrics, while preserving constraint satisfaction.
+
+Below is a 10×70 CSV (no headers) for the ten new conditions, each row a unique design.  
+
+405,69,600,73,140,45,560,74,650,45,40,30,36.5,24,24,15,9,STEEL,70,40,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,0,False,0,3,68,44,0,31.8,False,False,True,True,True,11,2,False,204,204,255,SPOKED,SPOKED,0,0,80,80,278,780,26.8,300,1  
+430,50,550,67,120,45,520,73,630,45,40,34,36.5,26,24,15,9,ALUMINIUM,60,40,40,330,350,16,18,False,False,135,3.0,2.5,2.5,2.5,2.0,2.0,2.5,700,30,700,30,1,1,False,1,1,68,44,0,31.8,False,False,True,True,True,12,1,False,0,128,255,SPOKED,SPOKED,0,0,80,80,278,720,34.9,320,1  
+405,55,600,73,130,45,500,73,640,45,40,28,36.5,24,22,15,9,ALUMINIUM,60,35,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,2,False,1,1,68,44,0,31.8,False,False,True,True,False,8,1,False,192,192,192,SPOKED,SPOKED,0,0,80,80,278,740,34.9,300,1  
+400,70,610,74,150,45,560,74,660,45,40,30,36.5,24,24,15,9,CARBON,75,45,45,330,350,16,18,False,False,130,2.0,1.5,1.5,1.5,1.2,1.2,1.5,700,25,700,25,0,0,False,0,0,68,44,20,44,False,False,True,True,True,11,2,False,0,0,139,DISC,DISC,0,0,0,0,278,800,26.8,350,0  
+430,50,550,67,120,45,520,73,630,45,40,34,36.5,26,24,15,9,STEEL,60,40,40,330,350,16,18,False,False,135,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,30,700,30,1,1,False,1,1,68,44,0,31.8,False,False,False,False,True,12,1,False,0,0,0,SPOKED,SPOKED,0,0,80,80,278,720,34.9,320,1  
+405,55,600,73,130,45,500,73,640,45,40,28,36.5,24,22,15,9,ALUMINIUM,60,35,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,2,False,1,1,68,44,0,31.8,False,False,True,True,True,7,1,False,255,128,0,SPOKED,SPOKED,0,0,80,80,278,750,34.9,300,1  
+405,69,600,73,140,45,560,74,650,45,40,30,36.5,24,24,15,9,STEEL,70,40,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,1,False,1,1,68,44,0,31.8,False,True,True,True,11,2,False,255,0,0,SPOKED,SPOKED,0,0,80,80,278,780,34.9,300,1  
+430,50,550,67,130,45,520,73,630,45,40,34,36.5,26,24,15,9,STEEL,60,40,40,330,350,16,18,False,False,135,3.0,2.5,2.5,2.5,2.0,2.0,2.0,700,30,700,30,1,1,False,1,1,68,44,0,31.8,False,False,False,False,True,12,1,False,128,128,128,SPOKED,SPOKED,0,0,80,80,278,720,34.9,320,1  
+405,55,600,73,130,45,500,73,640,45,40,28,36.5,24,22,15,9,ALUMINIUM,60,35,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,0,False,0,0,68,44,0,31.8,False,False,True,True,True,9,2,False,0,255,0,SPOKED,SPOKED,0,0,80,80,278,750,34.9,300,1  
+405,69,600,73,140,45,560,74,650,45,40,30,36.5,24,24,15,9,STEEL,70,40,40,330,350,16,18,False,False,130,3.0,2.0,2.0,2.0,1.5,1.5,2.0,700,25,700,25,0,1,False,1,1,68,44,0,31.8,False,False,False,False,True,11,2,False,0,100,0,SPOKED,SPOKED,0,0,80,80,278,780,34.9,300,1
