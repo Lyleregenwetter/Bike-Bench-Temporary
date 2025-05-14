@@ -351,7 +351,7 @@ class UsabilityEvaluator(EvaluationFunction):
 
     def evaluate(self, designs: torch.Tensor, conditioning: dict = {}) -> torch.Tensor:
         designs = self.preprocessor(designs)
-        predictions = self.model(designs)
+        predictions = 1- self.model(designs)
         return torch.clip(predictions, min=0, max=1)
 
 
