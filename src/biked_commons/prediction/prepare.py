@@ -139,11 +139,11 @@ def download_file(file_url, file_path):
 
 def check_download_CLIP_data():
     # File paths and URLs
-    x_id = "10541435"
+    x_id = "11479389"
     x_url = f"https://dataverse.harvard.edu/api/access/datafile/{x_id}"
     x_file = resource_path('datasets/split_datasets/CLIP_X_train.csv')
 
-    y_id = "10992683"
+    y_id = "11479388"
     y_url = f"https://dataverse.harvard.edu/api/access/datafile/{y_id}"
     y_file = resource_path('datasets/split_datasets/CLIP_Y_train.npy')
 
