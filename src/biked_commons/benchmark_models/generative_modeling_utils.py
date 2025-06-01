@@ -10,7 +10,6 @@ from torch.nn import MSELoss
 
 from biked_commons.conditioning import conditioning
 from biked_commons.design_evaluation.design_evaluation import *
-from biked_commons.resource_utils import split_datasets_path
 from biked_commons.conditioning import conditioning
 from biked_commons.design_evaluation import scoring
 

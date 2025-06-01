@@ -7,7 +7,8 @@ import pygmo as pg
 from sklearn.preprocessing import StandardScaler
 import os
 from biked_commons.conditioning import conditioning
-from biked_commons.resource_utils import split_datasets_path, resource_path
+from biked_commons.resource_utils import resource_path
+from biked_commons.data_loading import data_loading
 from biked_commons.design_evaluation.design_evaluation import construct_tensor_evaluator, EvaluationFunction
 from biked_commons.transformation import one_hot_encoding
 
@@ -35,7 +36,7 @@ def compute_ref_point(ref_scores, reduction):
 
 def recompute_ref_point(evaluator, eval_names, path, reduction, device):
     print("Calculating reference point for scoring functions...")
-    data = pd.read_csv(split_datasets_path("bike_bench_test.csv"), index_col=0)
+    data = pd.read_csv(data_loading.load_bike_bench_test(), index_col=0)
     num_data = data.shape[0]
     rider_condition = conditioning.sample_riders(num_data, split="test")
     use_case_condition = conditioning.sample_use_case(num_data, split="test")
@@ -105,7 +106,7 @@ class MMD(ScoringFunction):
 
     def __init__(self, batch_size = 1024, gamma=None):
         super().__init__()
-        raw_ref  = pd.read_csv(split_datasets_path("bike_bench_test.csv"), index_col=0).values.astype(np.float32)
+        raw_ref  = data_loading.load_bike_bench_test().values.astype(np.float32)
         
         self.scaler = StandardScaler()
         self.scaler.fit(raw_ref)

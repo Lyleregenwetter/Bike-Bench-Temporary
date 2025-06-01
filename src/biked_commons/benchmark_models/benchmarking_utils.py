@@ -19,7 +19,7 @@ def get_conditions_10k():
     conditions = {"Rider": rider_condition, "Use Case": use_case_condition, "Embedding": image_embeddings}
     return conditions
 
-def evaluate_uncond(result_tens, name, cond_idx, data_columns, device):
+def evaluate_uncond(result_tens, name, cond_idx, data_columns, device, save=True):
 
     condition = get_condition_by_idx(cond_idx)
 
@@ -32,16 +32,15 @@ def evaluate_uncond(result_tens, name, cond_idx, data_columns, device):
     main_scores = main_scorer(result_tens, condition)
     
     detailed_scores = detailed_scorer(result_tens, condition)
-
-    # Save result_tens as .pt
-    result_tens = result_tens.cpu()
-    torch.save(result_tens, os.path.join(result_dir, "result_tens.pt"))
-
-    main_scores.to_csv(os.path.join(result_dir, "main_scores.csv"), index_label=False, header=False)
-    detailed_scores.to_csv(os.path.join(result_dir, "detailed_scores.csv"), index_label=False, header=False)
+    
+    if save:
+        result_tens = result_tens.cpu()
+        torch.save(result_tens, os.path.join(result_dir, "result_tens.pt"))
+        main_scores.to_csv(os.path.join(result_dir, "main_scores.csv"), index_label=False, header=False)
+        detailed_scores.to_csv(os.path.join(result_dir, "detailed_scores.csv"), index_label=False, header=False)
     return main_scores, detailed_scores
 
-def evaluate_cond(result_tens, name, data_columns, device, indices = range(10000)):
+def evaluate_cond(result_tens, name, data_columns, device, indices = range(10000), save=True):
     condition = get_conditions_10k()
 
     condition = {"Rider": condition["Rider"][indices], "Use Case": condition["Use Case"][indices], "Embedding": condition["Embedding"][indices]}
@@ -55,12 +54,11 @@ def evaluate_cond(result_tens, name, data_columns, device, indices = range(10000
     main_scores = main_scorer(result_tens, condition)
     detailed_scores = detailed_scorer(result_tens, condition)
 
-    # Save result_tens as .pt
-    result_tens = result_tens.cpu()
-    torch.save(result_tens, os.path.join(result_dir, "result_tens.pt"))
-
-    main_scores.to_csv(os.path.join(result_dir, "main_scores.csv"), index_label=False, header=False)
-    detailed_scores.to_csv(os.path.join(result_dir, "detailed_scores.csv"), index_label=False, header=False)
+    if save:
+        result_tens = result_tens.cpu()
+        torch.save(result_tens, os.path.join(result_dir, "result_tens.pt"))
+        main_scores.to_csv(os.path.join(result_dir, "main_scores.csv"), index_label=False, header=False)
+        detailed_scores.to_csv(os.path.join(result_dir, "detailed_scores.csv"), index_label=False, header=False)
 
     return main_scores, detailed_scores
 

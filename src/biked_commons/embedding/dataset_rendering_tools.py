@@ -21,7 +21,8 @@ import uuid
 
 
 from biked_commons.rendering.rendering import RenderingEngine, FILE_BUILDER
-from biked_commons.resource_utils import resource_path, STANDARD_BIKE_RESOURCE, split_datasets_path, models_and_scalers_path
+from biked_commons.data_loading import data_loading
+from biked_commons.resource_utils import resource_path, STANDARD_BIKE_RESOURCE, models_and_scalers_path
 from biked_commons.embedding.clip_embedding_calculator import ClipEmbeddingCalculator
 from biked_commons.transformation.one_hot_encoding import encode_to_continuous
 from biked_commons.validation.base_validation_function import construct_tensor_validator
@@ -41,7 +42,9 @@ def get_bike_bench_records_with_id(num) -> Dict[str, dict]:
     (record_id: str) : (record: dict)
     }
     """
-    data = pd.read_csv(split_datasets_path("bike_bench.csv"), index_col=0)
+    data_train = data_loading.load_bike_bench_train()
+    data_test = data_loading.load_bike_bench_test()
+    data = pd.concat([data_train, data_test], axis=0)
     if num is None:
         num = len(data)
     else:

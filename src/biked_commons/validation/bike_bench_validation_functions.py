@@ -234,8 +234,6 @@ class RGBvalueGreaterThan255(ValidationFunction): #less than 0 covered in Positi
 bike_bench_validation_functions: List[ValidationFunction] = [
     SaddleHeightTooSmall(),
     SeatPostTooShort(),
-    # BsdRearTooSmall(),
-    # BsdFrontTooSmall(),
     HeadTubeLowerExtensionTooGreat(),
     HeadTubeLengthTooGreat(),
     PositiveValueNegative(),

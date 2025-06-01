@@ -12,7 +12,8 @@ from biked_commons.transformation import interface_points, framed, ordered_colum
 from biked_commons.ergonomics import joint_angles
 from biked_commons.prediction import aero_predictor, clip_predictor
 from biked_commons.prediction.prediction_utils import Preprocessor
-from biked_commons.resource_utils import models_and_scalers_path, split_datasets_path
+from biked_commons.resource_utils import models_and_scalers_path
+from biked_commons.data_loading import data_loading
 from biked_commons.validation.base_validation_function import construct_tensor_validator
 from biked_commons.validation.bike_bench_validation_functions import bike_bench_validation_functions
 
@@ -241,7 +242,7 @@ class AestheticsEvaluator(EvaluationFunction):
 class ValidationEvaluator(EvaluationFunction):
     def __init__(self, device="cpu", dtype=torch.float32):
         super().__init__(device, dtype)
-        self.clip_parameters = pd.read_csv(split_datasets_path("bike_bench.csv"), index_col=0).columns.tolist() #TODO maybe include a list somewhere to avoid loading a dataset?
+        self.clip_parameters = data_loading.load_bike_bench_train().columns.tolist() #TODO maybe include a list somewhere to avoid loading a dataset?
         validator, validation_names = construct_tensor_validator(bike_bench_validation_functions, self.clip_parameters)
         self.validator = validator
         self.validation_names = validation_names

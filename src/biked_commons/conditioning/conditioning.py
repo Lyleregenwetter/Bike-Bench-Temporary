@@ -3,15 +3,16 @@ import pandas as pd
 import torch
 
 
-from biked_commons.resource_utils import split_datasets_path
+from biked_commons.data_loading import data_loading
+from biked_commons.resource_utils import resource_path
 
 def sample_riders(num_samples, split = "test", randomize = False):
     # Sample random riders from the rider data
     if split == "test":
-        rider_data = pd.read_csv(split_datasets_path("aero_X_test.csv"), index_col=0)
+        rider_data, _ = data_loading.load_aero_test()
         rider_data = rider_data[['upper_leg', 'lower_leg', 'arm_length', 'torso_length', 'neck_and_head_length', 'torso_width']]
     elif split == "train":
-        rider_data = pd.read_csv(split_datasets_path("aero_X_train.csv"), index_col=0)
+        rider_data, _ = data_loading.load_aero_train()
         rider_data = rider_data[['upper_leg', 'lower_leg', 'arm_length', 'torso_length', 'neck_and_head_length', 'torso_width']]
     else:
         raise ValueError("Invalid split. Choose 'train' or 'test'.")
@@ -40,11 +41,11 @@ def sample_use_case(num_samples, split=None, randomize = False):
 def sample_text(num_samples, split="test", randomize = False):
     # read from .txt data into list of strings, without keeping the newline character
     if split == "test":
-        with open(split_datasets_path("text_descriptions_test.txt"), "r") as f:
+        with open(resource_path("text_descriptions/text_descriptions_test.txt"), "r") as f:
             text_data = f.readlines()
     
     elif split == "train":
-        with open(split_datasets_path("text_descriptions_train.txt"), "r") as f:
+        with open(resource_path("text_descriptions/text_descriptions_train.txt"), "r") as f:
             text_data = f.readlines()
     else:
         raise ValueError("Invalid split. Choose 'train' or 'test'.")
@@ -64,9 +65,10 @@ def sample_text(num_samples, split="test", randomize = False):
 def sample_image_embedding(num_samples, split="test", randomize = False):
     # Sample random riders from the rider data
     if split == "test":
-        embeddings = np.load(split_datasets_path("CLIP_Y_test.npy"))
+        _, embeddings = data_loading.load_clip_test()
+        embeddings = embeddings.values
     elif split == "train":
-        embeddings = np.load(split_datasets_path("CLIP_Y_train.npy"))
+        _, embeddings = data_loading.load_clip_train()
     else:
         raise ValueError("Invalid split. Choose 'train' or 'test'.")
     

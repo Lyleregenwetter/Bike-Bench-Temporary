@@ -2,33 +2,32 @@ import pandas as pd
 import numpy as np
 import torch
 from sklearn.metrics import f1_score, r2_score, mean_squared_error
-from biked_commons.prediction.loaders import one_hot_encode_material
 from sklearn.metrics.pairwise import cosine_similarity
-
-from biked_commons.resource_utils import resource_path, split_datasets_path
+from biked_commons.data_loading.data_loading import (
+    load_validity_test_oh,
+    load_structure_test_oh,
+    load_aero_test,
+    load_usability_cont_test,
+    load_clip_test,
+)
 
 def evaluate_validity(model, preprocessing_fn, device="cpu"):
-    X_test = pd.read_csv(split_datasets_path('validity_X_test.csv'), index_col=0)    
-    Y_test = pd.read_csv(split_datasets_path('validity_Y_test.csv'), index_col=0)
-    X_test = one_hot_encode_material(X_test)
+    X_test, Y_test = load_validity_test_oh()
     X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
     X_test_tensor = preprocessing_fn(X_test_tensor)
     predictions = model(X_test_tensor).detach().cpu().numpy()
-    predictions = predictions>= 0.5
+    predictions = predictions >= 0.5
     return f1_score(Y_test, predictions)
 
 def evaluate_structure(model, preprocessing_fn, device="cpu"):
-    Y_test = pd.read_csv(split_datasets_path('structure_Y_test.csv'), index_col=0)
-    X_test = pd.read_csv(split_datasets_path('structure_X_test.csv'), index_col=0)
-    X_test = one_hot_encode_material(X_test)
+    X_test, Y_test = load_structure_test_oh()
     X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
     X_test_tensor = preprocessing_fn(X_test_tensor)
     predictions = model(X_test_tensor).detach().cpu().numpy()
     return r2_score(Y_test, predictions)
 
 def evaluate_aero(model, preprocessing_fn, device="cpu"):
-    Y_test = pd.read_csv(split_datasets_path('aero_Y_test.csv'), index_col=0)
-    X_test = pd.read_csv(split_datasets_path('aero_X_test.csv'), index_col=0)
+    X_test, Y_test = load_aero_test()
     X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
     X_test_tensor = preprocessing_fn(X_test_tensor)
     predictions = model(X_test_tensor).detach().cpu().numpy()
@@ -36,24 +35,23 @@ def evaluate_aero(model, preprocessing_fn, device="cpu"):
 
 def evaluate_usability(model, preprocessing_fn, device="cpu", target_type='cont'):
     if target_type == 'cont':
-        X_train = pd.read_csv(split_datasets_path('usability_cont_X_test.csv'), index_col=0)
-        Y_train = pd.read_csv(split_datasets_path('usability_cont_Y_test.csv'), index_col=0)
-        X_train_tensor = torch.tensor(X_train.values.astype(float), dtype=torch.float32).to(device)
-        X_train_tensor = preprocessing_fn(X_train_tensor)
-        predictions = model(X_train_tensor).detach().cpu().numpy()
-        return r2_score(Y_train, predictions)
+        X_test, Y_test = load_usability_cont_test()
+        X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
+        X_test_tensor = preprocessing_fn(X_test_tensor)
+        predictions = model(X_test_tensor).detach().cpu().numpy()
+        return r2_score(Y_test, predictions)
     elif target_type == 'binary':
-        X_train = pd.read_csv(split_datasets_path('usability_binary_X_test.csv'), index_col=0)
-        Y_train = pd.read_csv(split_datasets_path('usability_binary_Y_test.csv'), index_col=0)
-        X_train_tensor = torch.tensor(X_train.values.astype(float), dtype=torch.float32).to(device)
-        X_train_tensor = preprocessing_fn(X_train_tensor)
-        predictions = model(X_train_tensor).detach().cpu().numpy()
+        from biked_commons.resource_utils import datasets_path
+        X_test = pd.read_csv(datasets_path('Predictive_Modeling_Datasets/usability_binary_X_test.tab'), index_col=0, sep='\t')
+        Y_test = pd.read_csv(datasets_path('Predictive_Modeling_Datasets/usability_binary_Y_test.tab'), index_col=0, sep='\t')
+        X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
+        X_test_tensor = preprocessing_fn(X_test_tensor)
+        predictions = model(X_test_tensor).detach().cpu().numpy()
         predictions = predictions >= 0.5
-        return f1_score(Y_train, predictions)
+        return f1_score(Y_test, predictions)
 
 def evaluate_clip(model, preprocessing_fn, device="cpu"):
-    Y_test = np.load(split_datasets_path('split_datasets/CLIP_Y_test.npy'))
-    X_test = pd.read_csv(split_datasets_path('CLIP_X_test.csv'), index_col=0)
+    X_test, Y_test = load_clip_test()
     X_test_tensor = torch.tensor(X_test.values.astype(float), dtype=torch.float32).to(device)
     X_test_tensor = preprocessing_fn(X_test_tensor)
     predictions = model(X_test_tensor).detach().cpu().numpy()
