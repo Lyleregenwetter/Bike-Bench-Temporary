@@ -17,6 +17,10 @@ Bike-Bench provides a standardized environment for evaluating and rendering bicy
 
 ## 🔧 Environment Setup
 
+> **Note:** This environment should run the core design evaluation functionality.  
+> Some models and optimization algorithms require additional dependencies to run.  
+> Rendering requires Java — see below.
+
 To set up the development environment using Conda or Mamba:
 
 ### 1. Clone the repository
@@ -48,8 +52,6 @@ conda activate bike-bench
 
 > Tip: You can rename the environment in `environment.yml` under the `name:` field.
 
-
-Note: This environment should run the core design evaluation functionality. Some models and optimization algorithms require additional dependencies to run. Rendering requires Java -- see below: 
 ---
 
 ## ☕ Java Requirement for Rendering
