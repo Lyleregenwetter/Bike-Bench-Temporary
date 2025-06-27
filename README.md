@@ -1,6 +1,6 @@
 # Bike-Bench Repository (Temporary)
 
-This is the temporary home of the **BikeBench** repository (pending official release).
+This is the temporary home of the **Bike-Bench** repository (pending official release).
 
 Bike-Bench provides a standardized environment for evaluating and rendering bicycle frame designs using machine learning models, ergonomic simulations, and geometry-based constraints, and more. Bike-Bench suppors a variety of design generation algorithms spanning LLMS, tabular generative models, gradient-based and heuristic optimiziation, and Optimization-Augmented Generative Models
 
@@ -48,6 +48,8 @@ conda activate bike-bench
 
 > Tip: You can rename the environment in `environment.yml` under the `name:` field.
 
+
+Note: This environment should run the core design evaluation functionality. Some models and optimization algorithms require additional dependencies to run. Rendering requires Java -- see below: 
 ---
 
 ## ☕ Java Requirement for Rendering
@@ -63,7 +65,6 @@ java -version
 
 If you need to install or upgrade, Java distributions are available at:
 
-- https://adoptium.net/
 - https://www.oracle.com/java/technologies/javase-downloads.html
 
 ---
