@@ -37,12 +37,17 @@ def clips_to_cad(df: pd.DataFrame):
     DTL = df["DT Length"]
     DTJY = Stack - (HTL - HTLX) * np.sin(HTA)
     DTJX = np.sqrt(DTL ** 2 - DTJY ** 2)
-    FWX = DTJX + (DTJY - FBBD) / np.tan(HTA)
     fork0r = df["FORK0R"]
-    shift = fork0r/np.sin(HTA)
-    FWX = FWX + shift
-    FCD = np.sqrt(FWX ** 2 + FBBD ** 2)
+    Fork_L_plus_HTLX_y = DTJY - FBBD + fork0r * np.cos(HTA)  # Fork L plus HTLX y component
+    Fork_L_plus_HTLX = Fork_L_plus_HTLX_y / np.sin(HTA)  # Fork L plus HTLX 
+    Fork_L_plus_HTLX_x = Fork_L_plus_HTLX * np.cos(HTA)  # Fork L plus HTLX x component
+    bb_to_wheel_x = DTJX + Fork_L_plus_HTLX_x + fork0r * np.sin(HTA)  # x component from BB to wheel
+    FCD = np.sqrt(bb_to_wheel_x ** 2 + FBBD ** 2)  # Fork center distance
+    Fork_L = Fork_L_plus_HTLX - HTLX  # Fork L
     df["FCD textfield"] = FCD
+    df["FORK0L"] = Fork_L
+    df["FORK1L"] = Fork_L
+    df["FORK2L"] = Fork_L
 
     df.drop(["DT Length"], axis=1, inplace=True)
     
@@ -59,4 +64,5 @@ def clips_to_cad(df: pd.DataFrame):
     df.drop("FIRST color B_RGB", axis=1, inplace=True)
     val = r * (2 ** 16) + g * (2 ** 8) + b - (2 ** 24)
     df["FIRST color sRGB"] = val
+
     return df.copy()

@@ -63,7 +63,7 @@ The 70 variables are described as follows:
 'SBLADEW front': [Continuous] If applicable, the width of the front wheel composite spokes.
 'SBLADEW rear': [Continuous] If applicable, the width of the rear wheel composite spokes.
 'Saddle length': [Continuous] The length of the saddle.
-'Saddle height': [Continuous] The bertical distance from  the saddle to the bottom bracket.
+'Saddle height': [Continuous] The vertical distance from the saddle to the bottom bracket.
 'Down tube diameter': [Continuous] The diameter of the down tube.
 'Seatpost LENGTH': [Continuous] The length of the seat post.
 'MATERIAL': [Categorical] The material of the bike frame. Possible values are: 'ALUMINIUM', 'CARBON', 'STEEL', 'TITANIUM', 'BAMBOO', 'OTHER'.

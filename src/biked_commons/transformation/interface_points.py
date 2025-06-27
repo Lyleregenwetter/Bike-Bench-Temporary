@@ -89,14 +89,8 @@ def calculate_interface_points(x, dtype=torch.float32, eps=1e-6):
     h0 = hbarextend - 60 
     posx += mask0 * (-h0 * cos_angle + v0 * sin_angle)
     posy += mask0 * (-h0 * sin_angle - v0 * cos_angle)
-
     hand_x = handlebar_mount_x + posx  # hand_x
     hand_y = handlebar_mount_y + posy  # hand_y
-    
-
-    y = [hand_x, hand_y, hip_x, hip_y, crank_length]
-    y = torch.stack(y, dim=1)  # Stack the tensors along the second dimension
-    y = y / 1000  # Convert to meters
 
     #offsets of hip position vs top of seatpost (from bikeCAD)
     hip_x = hip_x + 31.0  
@@ -104,6 +98,10 @@ def calculate_interface_points(x, dtype=torch.float32, eps=1e-6):
 
     #offsets from shoe thickness (from bikeCAD)
     hip_y = hip_y - 23
-    hand_y = hand_y - 23
+    hand_y = hand_y - 23   
+
+    y = [hand_x, hand_y, hip_x, hip_y, crank_length]
+    y = torch.stack(y, dim=1)  # Stack the tensors along the second dimension
+    y = y / 1000  # Convert to meters
 
     return y

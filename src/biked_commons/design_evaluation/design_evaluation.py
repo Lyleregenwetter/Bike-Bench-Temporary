@@ -48,7 +48,7 @@ class AeroEvaluator(EvaluationFunction):
         super().__init__(device, dtype)
         model_path = models_and_scalers_path("aero_model.pt")
         scaler_path = models_and_scalers_path("aero_scaler.pt")
-        self.model = torch.load(model_path, weights_only=False).to(self.device)
+        self.model = torch.load(model_path, weights_only=False, map_location=self.device).to(self.device)
         self.preprocessor = Preprocessor(scaler_path=scaler_path, preprocess_fn=aero_predictor.calculate_features, device=device)
 
     def variable_names(self) -> List[str]:
@@ -86,7 +86,7 @@ class FrameValidityEvaluator(EvaluationFunction):
         super().__init__(device, dtype)
         model_path = models_and_scalers_path("validity_model.pt")
         scaler_path = models_and_scalers_path("validity_scaler.pt")
-        self.model = torch.load(model_path, weights_only=False).to(self.device)
+        self.model = torch.load(model_path, weights_only=False, map_location=self.device).to(self.device)
         self.preprocessor = Preprocessor(scaler_path=scaler_path, preprocess_fn=None, device=device)
         
         self.converter = framed.clip_to_framed_tensor_builder(ordered_columns.bike_bench_columns, framed.FRAMED_ORDERED_COLUMNS)
@@ -114,7 +114,7 @@ class StructuralEvaluator(EvaluationFunction):
         super().__init__(device, dtype)
         model_path = models_and_scalers_path("structural_model.pt")
         scaler_path = models_and_scalers_path("structural_scaler.pt")
-        self.model = torch.load(model_path, weights_only=False).to(self.device)
+        self.model = torch.load(model_path, weights_only=False, map_location=self.device).to(self.device)
         self.preprocessor = Preprocessor(scaler_path=scaler_path, preprocess_fn=None, device=device)
         
         self.converter = framed.clip_to_framed_tensor_builder(ordered_columns.bike_bench_columns, framed.FRAMED_ORDERED_COLUMNS)
@@ -151,7 +151,7 @@ class AestheticsEvaluator(EvaluationFunction):
             preprocess_fn=clip_predictor.remove_wall_thickness,
             device=device
         )
-        self.model = torch.load(model_path, weights_only=False).to(self.device)
+        self.model = torch.load(model_path, weights_only=False, map_location=self.device).to(self.device)
         self.model.eval()
 
         self.mode = mode  # "Image", "Image Path", or "Text"
@@ -337,7 +337,7 @@ class UsabilityEvaluator(EvaluationFunction):
         super().__init__(device, dtype)
         scaler_path = models_and_scalers_path("usability_scaler.pt")
         model_path = models_and_scalers_path("usability_model.pt")
-        self.model = torch.load(model_path, weights_only=False).to(self.device)
+        self.model = torch.load(model_path, weights_only=False, map_location=self.device).to(self.device)
         self.preprocessor = Preprocessor(scaler_path=scaler_path, preprocess_fn=None, device=device)
 
     def variable_names(self) -> List[str]:
