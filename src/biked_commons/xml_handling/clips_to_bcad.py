@@ -39,11 +39,11 @@ def clips_to_cad(df: pd.DataFrame):
     DTJX = np.sqrt(DTL ** 2 - DTJY ** 2)
     fork0r = df["FORK0R"]
     Fork_L_plus_HTLX_y = DTJY - FBBD + fork0r * np.cos(HTA)  # Fork L plus HTLX y component
-    Fork_L_plus_HTLX = Fork_L_plus_HTLX_y / np.sin(HTA)  # Fork L plus HTLX 
-    Fork_L_plus_HTLX_x = Fork_L_plus_HTLX * np.cos(HTA)  # Fork L plus HTLX x component
+    Fork_L_plus_HTLX_plus_spacer = Fork_L_plus_HTLX_y / np.sin(HTA)  # Fork L plus HTLX 
+    Fork_L_plus_HTLX_x = Fork_L_plus_HTLX_plus_spacer * np.cos(HTA)  # Fork L plus HTLX x component
     bb_to_wheel_x = DTJX + Fork_L_plus_HTLX_x + fork0r * np.sin(HTA)  # x component from BB to wheel
     FCD = np.sqrt(bb_to_wheel_x ** 2 + FBBD ** 2)  # Fork center distance
-    Fork_L = Fork_L_plus_HTLX - HTLX  # Fork L
+    Fork_L = Fork_L_plus_HTLX_plus_spacer - HTLX - 10  # Fork L
     df["FCD textfield"] = FCD
     df["FORK0L"] = Fork_L
     df["FORK1L"] = Fork_L
