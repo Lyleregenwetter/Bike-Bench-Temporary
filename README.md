@@ -35,13 +35,13 @@ cd bikebench
 Using **Mamba** (recommended):
 
 ```bash
-mamba env create -f environment.yml
+mamba env create -f env.yml
 ```
 
 Or using **Conda**:
 
 ```bash
-conda env create -f environment.yml
+conda env create -f env.yml
 ```
 
 ### 3. Activate the environment
@@ -50,7 +50,7 @@ conda env create -f environment.yml
 conda activate bike-bench
 ```
 
-> Tip: You can rename the environment in `environment.yml` under the `name:` field.
+> Tip: You can rename the environment in `env.yml` under the `name:` field.
 
 ---
 
