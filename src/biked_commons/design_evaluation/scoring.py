@@ -36,7 +36,7 @@ def compute_ref_point(ref_scores, reduction):
 
 def recompute_ref_point(evaluator, eval_names, path, reduction, device):
     print("Calculating reference point for scoring functions...")
-    data = pd.read_csv(data_loading.load_bike_bench_test(), index_col=0)
+    data = data_loading.load_bike_bench_test()
     num_data = data.shape[0]
     rider_condition = conditioning.sample_riders(num_data, split="test")
     use_case_condition = conditioning.sample_use_case(num_data, split="test")

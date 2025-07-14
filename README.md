@@ -2,7 +2,7 @@
 
 This is the temporary home of the **Bike-Bench** repository (pending official release).
 
-Bike-Bench provides a standardized environment for evaluating and rendering bicycle frame designs using machine learning models, ergonomic simulations, and geometry-based constraints, and more. Bike-Bench suppors a variety of design generation algorithms spanning LLMS, tabular generative models, gradient-based and heuristic optimiziation, and Optimization-Augmented Generative Models
+Bike-Bench provides a standardized environment for evaluating and rendering bicycle frame designs using machine learning models, ergonomic simulations, and geometry-based constraints, and more. Bike-Bench suppors a variety of design generation algorithms spanning LLMS, tabular generative models, gradient-based and heuristic optimization, and Optimization-Augmented Generative Models
 
 ---
 
@@ -71,9 +71,32 @@ If you need to install or upgrade, Java distributions are available at:
 
 ---
 
+## 🌟 Quality of Life Features
+
+Bike-Bench includes several features designed to make experimentation and model evaluation easier:
+- ✅ Automatic dataverse integration for fetching datasets
+- ✅ Automated rendering of bike designs via a Java-based backend
+- ✅ Prebuilt constraint and objective sets
+- ✅ Automated evaluation and scoring pipelines
+- ✅ Model scorecards for easy visualization of results
+
+### 🔍 Model Scorecard Preview
+
+Below is an example of the built-in scorecard system used to compare generative models:
+
+![Model Scorecard Example](assets/scorecard.png)
+
+### 🚴 Rendering Output Preview
+
+Example of rendered bicycle geometry using the BikeCAD-based rendering backend:
+
+![Rendered Bike Example](assets/render.png)
+
+---
+
 ## 📘 Coming Soon
 
-- Usage examples and notebooks
-- Model Training Tools
-- Model Leaderboards
+- More usage examples and notebooks
+- Model training tools
+- Model leaderboards
 

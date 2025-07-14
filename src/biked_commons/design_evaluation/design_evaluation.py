@@ -60,7 +60,7 @@ class AeroEvaluator(EvaluationFunction):
         ]
 
     def return_names(self) -> List[str]:
-        return ['Drag Force']
+        return ['Drag Force (N)']
     
     def return_types(self) -> List[str]:
         return [1]
@@ -123,7 +123,7 @@ class StructuralEvaluator(EvaluationFunction):
         return ordered_columns.bike_bench_columns
 
     def return_names(self) -> List[str]:
-        return ['Mass', 'Planar Compliance', 'Transverse Compliance', 'Eccentric Compliance', 'Planar Safety Factor', 'Eccentric Safety Factor']
+        return ['Mass (kg)', 'Planar Compliance Score', 'Transverse Compliance Score', 'Eccentric Compliance Score', 'Planar Safety Factor', 'Eccentric Safety Factor']
 
     def return_types(self) -> List[str]:
         return [1,1,1,1,0,0]
@@ -273,7 +273,7 @@ class ErgonomicsEvaluator(EvaluationFunction):
         ]
 
     def return_names(self) -> List[str]:
-        return ['Knee Angle Error', 'Hip Angle Error', "Arm Angle Error"]
+        return ['Knee Angle Error (deg.)', 'Hip Angle Error (deg.)', "Arm Angle Error (deg.)"]
     
     def return_types(self) -> List[str]:
         return [1, 1, 1]
@@ -344,7 +344,7 @@ class UsabilityEvaluator(EvaluationFunction):
         return ordered_columns.USABILITY_COLUMNS
 
     def return_names(self) -> List[str]:
-        return ['Usability Score - 0 to 1']
+        return ['Usability Score']
 
         
     def return_types(self) -> List[str]:
