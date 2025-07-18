@@ -41,8 +41,9 @@ def recompute_ref_point(evaluator, eval_names, path, reduction, device):
     rider_condition = conditioning.sample_riders(num_data, split="test")
     use_case_condition = conditioning.sample_use_case(num_data, split="test")
     embedding = conditioning.sample_image_embedding(num_data, split="test")
+    text_condition = conditioning.sample_text(num_data, split="test")
 
-    condition = {"Rider": rider_condition, "Use Case": use_case_condition, "Embedding": embedding}
+    condition = {"Rider": rider_condition, "Use Case": use_case_condition, "Text": text_condition, "Embedding": embedding}
     scores = evaluator(torch.tensor(data.values, dtype=torch.float32, device=device), condition)
     objective_scores = scores.detach().cpu().numpy()
     ref_point = compute_ref_point(objective_scores, reduction)

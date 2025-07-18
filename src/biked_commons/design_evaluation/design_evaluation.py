@@ -15,7 +15,7 @@ from biked_commons.prediction.prediction_utils import Preprocessor
 from biked_commons.resource_utils import models_and_scalers_path
 from biked_commons.data_loading import data_loading
 from biked_commons.validation.base_validation_function import construct_tensor_validator
-from biked_commons.validation.bike_bench_validation_functions import bike_bench_validation_functions
+from biked_commons.validation.bike_bench_validation_functions import bike_bench_validation_functions, difficult_validation_functions
 
 
 
@@ -139,7 +139,7 @@ class StructuralEvaluator(EvaluationFunction):
 
 class AestheticsEvaluator(EvaluationFunction):
     def __init__(self,
-                 mode: str = "Image",
+                 mode: str = "Test",
                  device: str = "cpu",
                  dtype: torch.dtype = torch.float32,
                  batch_size: int = None):
@@ -164,9 +164,9 @@ class AestheticsEvaluator(EvaluationFunction):
         return ordered_columns.bike_bench_columns
 
     def return_names(self) -> List[str]:
-        if self.mode in ["Image", "Image Path"]:
-            return ["Cosine Distance to Image"]
-        elif self.mode == "Text":
+        # if self.mode in ["Image", "Image Path"]:
+        #     return ["Cosine Distance to Image"]
+        if self.mode == "Text":
             return ["Cosine Distance to Text"]
         elif self.mode == "Embedding":
             return ["Cosine Distance to Embedding"]
@@ -182,26 +182,26 @@ class AestheticsEvaluator(EvaluationFunction):
             raise ValueError(f"No conditioning provided for mode '{self.mode}'")
 
         # Prepare a list of items for embedding
-        if self.mode == "Image":
-            if isinstance(cond, torch.Tensor):
-                items = [cond]
-            elif isinstance(cond, (list, tuple)):
-                items = list(cond)
-            else:
-                raise TypeError("For Image mode, conditioning must be a Tensor or list of Tensors")
-            embed = self.embedding_model.embed_images(items)
+        # if self.mode == "Image":
+        #     if isinstance(cond, torch.Tensor):
+        #         items = [cond]
+        #     elif isinstance(cond, (list, tuple)):
+        #         items = list(cond)
+        #     else:
+        #         raise TypeError("For Image mode, conditioning must be a Tensor or list of Tensors")
+        #     embed = self.embedding_model.embed_images(items)
 
-        elif self.mode == "Image Path":
-            if isinstance(cond, str):
-                paths = [cond]
-            elif isinstance(cond, (list, tuple)):
-                paths = list(cond)
-            else:
-                raise TypeError("For Image Path mode, conditioning must be a path or list of paths")
-            imgs = [Image.open(p) for p in paths]
-            embed = self.embedding_model.embed_images(imgs)
+        # elif self.mode == "Image Path":
+        #     if isinstance(cond, str):
+        #         paths = [cond]
+        #     elif isinstance(cond, (list, tuple)):
+        #         paths = list(cond)
+        #     else:
+        #         raise TypeError("For Image Path mode, conditioning must be a path or list of paths")
+        #     imgs = [Image.open(p) for p in paths]
+        #     embed = self.embedding_model.embed_images(imgs)
 
-        elif self.mode == "Text":
+        if self.mode == "Text":
             if isinstance(cond, str):
                 texts = [cond]
             elif isinstance(cond, (list, tuple)):
@@ -240,10 +240,13 @@ class AestheticsEvaluator(EvaluationFunction):
         return (1 - cos_sim) / 2
 
 class ValidationEvaluator(EvaluationFunction):
-    def __init__(self, device="cpu", dtype=torch.float32):
+    def __init__(self, device="cpu", dtype=torch.float32, only_difficult=False):
         super().__init__(device, dtype)
         self.clip_parameters = data_loading.load_bike_bench_train().columns.tolist() #TODO maybe include a list somewhere to avoid loading a dataset?
-        validator, validation_names = construct_tensor_validator(bike_bench_validation_functions, self.clip_parameters)
+        if only_difficult:
+            validator, validation_names = construct_tensor_validator(difficult_validation_functions, self.clip_parameters)
+        else:
+            validator, validation_names = construct_tensor_validator(bike_bench_validation_functions, self.clip_parameters)
         self.validator = validator
         self.validation_names = validation_names
 
@@ -491,6 +494,21 @@ def get_standard_evaluations(device, aesthetics_mode = "Embedding") -> List[Eval
         StructuralEvaluator(device=device),
         ValidationEvaluator(device=device),
         FrameValidityEvaluator(device=device)
+    ]
+
+    return StandardEvaluations
+
+# A special set of evaluations that only includes constraints that at least 5% of the dataset designs violate. 
+# Intended for use in models to test ability to infer constraints based on data.
+def get_standard_evaluations_with_constraint_threshold(device, aesthetics_mode = "Embedding") -> List[EvaluationFunction]:
+
+    StandardEvaluations = [
+        UsabilityEvaluator(device=device),
+        AeroEvaluator(device=device),
+        ErgonomicsEvaluator(device=device),
+        AestheticsEvaluator(mode=aesthetics_mode, batch_size=64, device=device),
+        StructuralEvaluator(device=device),
+        ValidationEvaluator(device=device, only_difficult=True),
     ]
 
     return StandardEvaluations

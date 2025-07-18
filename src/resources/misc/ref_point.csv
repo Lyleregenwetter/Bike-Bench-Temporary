@@ -1,10 +1,10 @@
 Usability Score,1.0
-Drag Force (N),28.46898
+Drag Force (N),28.468983
 Knee Angle Error (deg.),707.344
-Hip Angle Error (deg.),772.5807
-Arm Angle Error (deg.),811.4589
-Cosine Distance to Embedding,0.04577595
-Mass (kg),19.786545
+Hip Angle Error (deg.),772.5806
+Arm Angle Error (deg.),811.45886
+Cosine Distance to Embedding,0.04577577
+Mass (kg),19.786547
 Planar Compliance Score,12.605206
 Transverse Compliance Score,8.018859
 Eccentric Compliance Score,8.710287
@@ -12,14 +12,19 @@ Planar Safety Factor,1.5
 Eccentric Safety Factor,1.5
 Saddle height too small,356.2
 Seat post too short,852.69995
-Head tube lower extension too great,40.0
-Head tube length too great,68.0
-Certain parameters must be positive,435.0
-Chain stay should be greater than wheel radius,37.0
-Chain stay should be greater than BB,-210.0
-Seat stay should be greater than wheel radius,85.40518
-Down tube must reach head tube,-6.12e-17
-The pedal shouldn't intersect the front wheel,509.5
-The crank shouldn't hit the ground when it is in its lower position,22.5
-RGB value should be less than 255,0.0
+Head tube lower extension longer than head tube,40.0
+Head tube upper extension and lower extension overlap,68.0
+Strictly postive parameter is negative,435.0
+Chain stay smaller than rear wheel radius,37.0
+Chain stay shorter than BB drop,-210.0
+Seat stay smaller than rear wheel radius,85.40518
+Seat Tube Intersects Rear Wheel,104.93741
+Down tube can't reach head tube,-6.12e-17
+Rear wheel cutout severs seat tube,-12.350098
+Foot intersects front wheel,158372.3
+Crank hits ground in lowest position,37.5
+RGB value greater than 255,0.0
+Chain stays intersect,36.0
+Tube wall thickness exceeds radius,104.44669
+Down tube intersects front wheel,355.45
 Predicted Frame Validity,0.5

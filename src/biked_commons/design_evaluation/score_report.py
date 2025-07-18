@@ -62,6 +62,7 @@ class ScoreReportDashboard:
     def __init__(
         self,
         design_batches: List[torch.Tensor],
+        eval_funcs: List[callable],
         model_names: Optional[List[str]],
         condition: dict,
         column_names: List[str],
@@ -101,7 +102,6 @@ class ScoreReportDashboard:
         self.model_colors = dict(zip(model_names, model_colors))
 
         # build eval + scorers
-        eval_funcs = get_standard_evaluations(device)
         (self._tensor_evaluator,
          self.eval_names,
          self.eval_types) = construct_tensor_evaluator(
@@ -249,9 +249,8 @@ class ScoreReportDashboard:
             ax.text(x1, 0.02, _format_num(x1),
                     ha='center', va='bottom', fontsize=7)
 
-            # … **new**: rank under focal tick at y = –0.2
-            ax.text(val, -0.022, f"({_ordinal(rk)})",
-                    ha='center', va='top', fontsize=8, color=color)
+            ax.text(val, -0.02, f"{_format_num(val)} ({_ordinal(rk)})",
+                ha='center', va='top', fontsize=8, color=color)
 
             ax.text(
                 0.5, 0.45, col,
@@ -290,29 +289,35 @@ class ScoreReportDashboard:
             mean_val  = all_raw[model_name][:,idx].mean()
             # gray KDEs clipped
             for other in self.model_names:
+                raw = all_raw[other][:, idx]
+                trimmed = raw[(raw >= low) & (raw <= high)]
                 sns.kdeplot(
-                    data      = all_raw[other][:,idx],
+                    data      = trimmed,
                     ax        = ax,
                     # cut       = 0,
                     clip      = (low, high),
-                    bw_adjust = 1.0,
+                    bw_adjust = 0.5,
                     color     = 'gray',
                     alpha     = 0.2,
                     linewidth = 1,
-                    fill      = False
+                    fill      = False,
+                    gridsize  = 1000,
                 )
 
             # colored KDE clipped
+            raw = all_raw[model_name][:, idx]
+            trimmed = raw[(raw >= low) & (raw <= high)]
             sns.kdeplot(
-                data      = all_raw[model_name][:,idx],
+                data      = trimmed,
                 ax        = ax,
                 # cut       = 0,
                 clip      = (low, high),
-                bw_adjust = 1.0,
+                bw_adjust = 0.5,
                 color     = color,
                 alpha     = 0.6,
                 linewidth = 1,
-                fill      = True
+                fill      = True,
+                gridsize  = 1000,
             )
 
             ax.set_xlim(low, high)
@@ -379,14 +384,5 @@ class ScoreReportDashboard:
         for j in range(con_count, con_rows*constraints_per_row):
             r,c = divmod(j, constraints_per_row)
             fig.add_subplot(gs_con[r,c]).axis('off')
-
-        # for ax in fig.get_axes():
-        #     # turn the frame on
-        #     ax.set_frame_on(True)
-        #     # ensure every spine is visible, black, and 1pt thick
-        #     for spine in ax.spines.values():
-        #         spine.set_visible(True)
-        #         spine.set_linewidth(1)
-        #         spine.set_color("black")
 
         plt.show()
