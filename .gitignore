@@ -2,3 +2,4 @@
 __pycache__/
 src/resources/datasets/Generative_Modeling_Datasets
 src/resources/datasets/Predictive_Modeling_Datasets
+**/BikeCAD_17.1_configuration/
