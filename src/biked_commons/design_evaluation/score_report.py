@@ -67,7 +67,7 @@ class ScoreReportDashboard:
         condition: dict,
         column_names: List[str],
         model_colors: Optional[List[str]] = None,
-        device: str = "cpu"
+        device: str = "cpu",
     ):
         # default model names if needed
         n_models = len(design_batches)
@@ -156,9 +156,40 @@ class ScoreReportDashboard:
         constraints_per_row: int        = 20,
         total_width: float              = 12.0,
         summary_cell_height: float      = 0.4,
-        objective_cell_height: float    = 1.0
+        objective_cell_height: float    = 1.0,
+        truncate_tails_magnitude: float = 0.01,
+        filter_invalid: bool            = True,
+        min_kde_samples: int            = 3
+        
     ):
         """Render one model’s scorecard with clipped KDEs and baseline ticks."""
+
+        self.truncate_tails_magnitude = truncate_tails_magnitude
+        self.filter_invalid = filter_invalid
+
+        # build validity masks if needed
+        valid_masks = {}
+        if self.filter_invalid:
+            is_con = np.array(self.eval_types) == 0
+            for name, b in self.design_batches.items():
+                with torch.no_grad():
+                    arr = self._tensor_evaluator(b, self.condition).detach().cpu().numpy()
+                valid_masks[name] = np.all(arr[:, is_con] <= 0, axis=1)
+
+        # compute raw objective arrays
+        is_obj = np.array(self.eval_types) == 1
+        all_raw = {}
+        for name, b in self.design_batches.items():
+            with torch.no_grad():
+                arr = self._tensor_evaluator(b, self.condition).detach().cpu().numpy()[:, is_obj]
+            if self.filter_invalid:
+                arr = arr[valid_masks[name]]
+            all_raw[name] = arr
+
+        # count objectives and layout
+        obj_count = len(self.objective_names)
+        obj_rows = int(np.ceil(obj_count / objectives_per_row))
+
         # default model
         if model_name is None:
             model_name = self.model_names[0]
@@ -262,101 +293,112 @@ class ScoreReportDashboard:
             ax.set_ylim(-0.01, 0.05)
             ax.axis('off')
 
+        
         # 4) Objective KDEs
-        # gather raw arrays
-        all_raw = {}
-        is_obj  = np.array(self.eval_types)==1
-        for name,b in self.design_batches.items():
-            with torch.no_grad():
-                out = self._tensor_evaluator(b, self.condition)
-            arr = out.detach().cpu().numpy()
-            all_raw[name] = arr[:, is_obj]
-
-        gs_obj = outer[1].subgridspec(
-            obj_rows,
-            objectives_per_row,
-            wspace=0.05,
-            hspace=0.8    # <-- try values like 0.2, 0.3, 0.4 until it feels right
-        )
-        for idx in range(obj_count):
-            r,c = divmod(idx, objectives_per_row)
-            ax  = fig.add_subplot(gs_obj[r,c])
-
-            # compute per‐model 1%/99% then global bounds
-            p1s  = [np.percentile(all_raw[m][:,idx],  1) for m in self.model_names]
-            p99s = [np.percentile(all_raw[m][:,idx], 99) for m in self.model_names]
-            low, high = min(p1s), max(p99s)
-            mean_val  = all_raw[model_name][:,idx].mean()
-            # gray KDEs clipped
-            for other in self.model_names:
-                raw = all_raw[other][:, idx]
-                trimmed = raw[(raw >= low) & (raw <= high)]
-                sns.kdeplot(
-                    data      = trimmed,
-                    ax        = ax,
-                    # cut       = 0,
-                    clip      = (low, high),
-                    bw_adjust = 0.5,
-                    color     = 'gray',
-                    alpha     = 0.2,
-                    linewidth = 1,
-                    fill      = False,
-                    gridsize  = 1000,
-                )
-
-            # colored KDE clipped
-            raw = all_raw[model_name][:, idx]
-            trimmed = raw[(raw >= low) & (raw <= high)]
-            sns.kdeplot(
-                data      = trimmed,
-                ax        = ax,
-                # cut       = 0,
-                clip      = (low, high),
-                bw_adjust = 0.5,
-                color     = color,
-                alpha     = 0.6,
-                linewidth = 1,
-                fill      = True,
-                gridsize  = 1000,
+            gs_obj = outer[1].subgridspec(
+                obj_rows,
+                objectives_per_row,
+                wspace=0.05,
+                hspace=0.8
             )
+            for idx in range(obj_count):
+                r, c = divmod(idx, objectives_per_row)
+                ax = fig.add_subplot(gs_obj[r, c])
 
-            ax.set_xlim(low, high)
+                valid_raws = [
+                    all_raw[m][:, idx]
+                    for m in self.model_names
+                    if all_raw[m].size >= min_kde_samples
+                ]
+                if not valid_raws:
+                    # no model even has min_kde_samples → blank this subplot
+                    ax.axis('off')
+                    continue
 
-            # baseline ticks at every model's mean
-            means = {m: all_raw[m][:,idx].mean() for m in self.model_names}
-            for m,mv in means.items():
-                ax.plot(mv, 0, '|',
-                        color=('gray' if m!=model_name else color),
-                        markersize=(6 if m!=model_name else 10))
+                # global pooling for percentile bounds
+                # gather all raw across models for this objective
+                pooled = np.concatenate([all_raw[m][:, idx] for m in self.model_names
+                                        if all_raw[m].size >= min_kde_samples])
 
-            # extremes labels
-            ax.set_xticks([low, high])
-            ax.set_xticklabels([_format_num(low), _format_num(high)], fontsize=7)
-            ax.set_yticks([]); ax.set_ylabel('')
+                # lower bound is fixed at zero (no need to truncate lower tail)
+                low = 0.0
+                high = np.percentile(pooled, 100 * (1 - self.truncate_tails_magnitude))
 
-            ax.tick_params(axis='x', pad=2)
+                # prepare per-model trimmed data
+                data_for_kde = {}
+                for other in self.model_names:
+                    raw = all_raw[other][:, idx]
+                    trimmed = raw[(raw >= low) & (raw <= high)]
+                    if trimmed.size >= min_kde_samples:
+                        data_for_kde[other] = trimmed
 
-            labels = ax.get_xticklabels()
-            if len(labels) >= 2:
-                labels[0].set_ha('left')   # left‐align the “low” label
+                # if no model has enough data, blank
+                if not data_for_kde:
+                    ax.axis('off')
+                    continue
+
+                # plot KDEs and collect means
+                means = {}
+                for other, trimmed in data_for_kde.items():
+                    is_focal = (other == model_name)
+                    sns.kdeplot(
+                        data=trimmed,
+                        ax=ax,
+                        clip=(low, high),
+                        bw_adjust=0.5,
+                        color=(self.model_colors[other] if is_focal else 'gray'),
+                        alpha=(0.6 if is_focal else 0.2),
+                        linewidth=1,
+                        fill=is_focal,
+                        gridsize=1000, 
+                        warn_singular=False
+                    )
+                    means[other] = trimmed.mean()
+
+                # baseline ticks
+                for other, mv in means.items():
+                    ax.plot(mv, 0, '|',
+                            color=(self.model_colors[other] if other == model_name else 'gray'),
+                            markersize=(10 if other == model_name else 6))
+
+                # adjust y-axis
+                lines = ax.get_lines()
+                vmax = max((np.nanmax(l.get_ydata()) for l in lines), default=0)
+                ax.set_ylim(0, vmax * 1.05)
+
+                # annotate focal or 'no data'
+                if model_name in means:
+                    mean_val = means[model_name]
+                    sorted_models = sorted(means.keys(), key=lambda m: means[m])
+                    rk = _ordinal(sorted_models.index(model_name) + 1)
+                    # same offset logic as the original code:
+                    y0 = 0.16 * (ax.get_ylim()[1] - ax.get_ylim()[0])
+                    ax.text(mean_val, y0, f"({rk})", ha='center', va='bottom', fontsize=7)
+                else:
+                    midx = 0.5 * (low + high)
+                    midy = 0.5 * (ax.get_ylim()[1] - ax.get_ylim()[0])
+                    ax.text(midx, midy, "Not enough valid samples!",
+                                                ha='center', va='center', fontsize=7, color='gray')
+
+                # x-axis formatting
+                ax.set_xlim(low, high)
+                ax.set_xticks([low, high])
+                ax.set_xticklabels([_format_num(low), _format_num(high)], fontsize=7)
+                labels = ax.get_xticklabels()
+                labels[0].set_ha('left')
                 labels[1].set_ha('right')
+                ax.set_yticks([])
+                ax.set_ylabel("")
+                ax.set_title(self.objective_names[idx], fontsize=9, pad=2)
+                for loc in ['top', 'right', 'left']:
+                    ax.spines[loc].set_visible(False)
+                ax.spines['bottom'].set_visible(True)
 
-            # **new**: rank under focal tick
-            sorted_models = sorted(self.model_names, key=lambda m: means[m])
-            rk = _ordinal(sorted_models.index(model_name)+1)
-            y0 = 0.16 * (ax.get_ylim()[1] - ax.get_ylim()[0])
-            ax.text(mean_val, y0, f"({rk})",
-                    ha='center', va='bottom', fontsize=7)
-
-            ax.set_title(self.objective_names[idx], fontsize=9, pad=2)
-            for loc in ['top','right','left']:
-                ax.spines[loc].set_visible(False)
-            ax.spines['bottom'].set_visible(True)
-
-        # blank extras
-        for j in range(obj_count, obj_rows*objectives_per_row):
-            r,c = divmod(j, objectives_per_row)
-            fig.add_subplot(gs_obj[r,c]).axis('off')
+            # blank out unused axes
+            for j in range(obj_count, obj_rows * objectives_per_row):
+                r, c = divmod(j, objectives_per_row)
+                fig.add_subplot(gs_obj[r, c]).axis('off')
+                
 
         # 5) Constraints (unchanged)
         gs_con = outer[2].subgridspec(con_rows, constraints_per_row, wspace=0.02)

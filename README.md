@@ -92,6 +92,12 @@ Example of rendered bicycle geometry using the BikeCAD-based rendering backend:
 
 ![Rendered Bike Example](assets/render.png)
 
+### Implicit Constraint Inference Results
+
+New set of experiments comparing model performance when exposed to all constraints versus performance when exposed to only a subset, forcing models to undertake implicit constraint inference (denoted with postfix -CI):
+
+![Constraint Inference Plots](assets/CI_experiments.png)
+
 ---
 
 ## 📘 Coming Soon

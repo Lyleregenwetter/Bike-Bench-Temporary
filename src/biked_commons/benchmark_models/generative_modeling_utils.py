@@ -32,7 +32,12 @@ def sample_continuous(num_samples, split="test", randomize = False):
     all = torch.cat((emb, rider, use_case), dim=1)
     return all
 
-
+def sample_standard(num_samples, split="test", randomize = False):
+    emb = conditioning.sample_image_embedding(num_samples, split, randomize)
+    rider = conditioning.sample_riders(num_samples, split, randomize)
+    use_case = conditioning.sample_use_case(num_samples, split, randomize)
+    condition = {"Rider": rider, "Use Case": use_case, "Embedding": emb}
+    return condition
 
 def parse_continuous_condition(condition):
     image_embeddings = condition[:, :512]
@@ -50,8 +55,12 @@ def piecewise_constraint_score(constraint_scores, constraint_falloff = 10):
     result = piece1 * mask + piece2 * (1 - mask)
     return result
 
-def get_composite_score_fn(scaler, columns, constrant_vs_objective_weight = 10.0, constraint_falloff=10.0, device="cpu"):
-    evaluator, requirement_names, requirement_types = construct_tensor_evaluator(get_standard_evaluations(device), columns)
+def get_composite_score_fn(scaler, columns, constrant_vs_objective_weight = 10.0, constraint_falloff=10.0, CI = False, device="cpu"):
+    if CI:
+        evaluations = get_standard_evaluations_with_constraint_threshold(device)
+    else:
+        evaluations = get_standard_evaluations(device)
+    evaluator, requirement_names, requirement_types = construct_tensor_evaluator(evaluations, columns)
 
     isobjective = torch.tensor(requirement_types) == 1
 
@@ -110,13 +119,12 @@ def get_uneven_batch_sizes(total_data_points, batch_size):
     return batch_sizes
 
 
-def get_diversity_loss_fn(scaler:TorchScaler, columns, diversity_weight=0.1, score_weight=0.1, constraint_vs_objective_weight=10.0, constraint_falloff=10.0, dpp_batch=16, device="cpu"):
-    composite_score_fn = get_composite_score_fn(scaler, columns, constrant_vs_objective_weight = constraint_vs_objective_weight, constraint_falloff = constraint_falloff, device=device)
+def get_diversity_loss_fn(scaler:TorchScaler, columns, diversity_weight=0.1, score_weight=0.1, constraint_vs_objective_weight=10.0, constraint_falloff=10.0, dpp_batch=16, CI=False, device="cpu"):
+    composite_score_fn = get_composite_score_fn(scaler, columns, constrant_vs_objective_weight = constraint_vs_objective_weight, constraint_falloff = constraint_falloff, CI=CI, device=device)
 
     def diversity_loss_fn(x, condition, diversity_weight=diversity_weight, score_weight=score_weight):
         if diversity_weight == 0:
             return torch.tensor(0.0), {"DIV-OFF": 0.0}
-        
         scores, report= composite_score_fn(x, condition)
 
         # Initialize the total loss

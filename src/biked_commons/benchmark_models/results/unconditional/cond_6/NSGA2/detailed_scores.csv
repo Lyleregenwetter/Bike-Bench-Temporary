@@ -4,20 +4,20 @@ Min Objective Score: Knee Angle Error (deg.),0.0
 Min Objective Score: Hip Angle Error (deg.),0.0
 Min Objective Score: Arm Angle Error (deg.),0.0
 Min Objective Score: Cosine Distance to Embedding,0.00021031498908996582
-Min Objective Score: Mass (kg),4.290920257568359
+Min Objective Score: Mass (kg),4.290920734405518
 Min Objective Score: Planar Compliance Score,0.0
 Min Objective Score: Transverse Compliance Score,0.0
 Min Objective Score: Eccentric Compliance Score,0.0
 Mean Objective Score: Usability Score,0.5700076222419739
 Mean Objective Score: Drag Force (N),16.587238311767578
 Mean Objective Score: Knee Angle Error (deg.),26.301841735839844
-Mean Objective Score: Hip Angle Error (deg.),31.143049240112305
-Mean Objective Score: Arm Angle Error (deg.),35.011783599853516
-Mean Objective Score: Cosine Distance to Embedding,0.009508221410214901
+Mean Objective Score: Hip Angle Error (deg.),31.14305877685547
+Mean Objective Score: Arm Angle Error (deg.),35.011802673339844
+Mean Objective Score: Cosine Distance to Embedding,0.009508219547569752
 Mean Objective Score: Mass (kg),11.17496109008789
-Mean Objective Score: Planar Compliance Score,0.472520649433136
+Mean Objective Score: Planar Compliance Score,0.47252070903778076
 Mean Objective Score: Transverse Compliance Score,1.0382503271102905
-Mean Objective Score: Eccentric Compliance Score,0.8921889662742615
+Mean Objective Score: Eccentric Compliance Score,0.8921890258789062
 Constraint Violation Rate: Planar Safety Factor,0.0
 Constraint Violation Rate: Eccentric Safety Factor,0.0
 Constraint Violation Rate: Saddle height too small,0.0

@@ -28,7 +28,7 @@ Constraint Violation Rate: Strictly postive parameter is negative,0.0
 Constraint Violation Rate: Chain stay smaller than rear wheel radius,0.0
 Constraint Violation Rate: Chain stay shorter than BB drop,0.0
 Constraint Violation Rate: Seat stay smaller than rear wheel radius,0.0
-Constraint Violation Rate: Seat Tube Intersects Rear Wheel,0.014
+Constraint Violation Rate: Seat Tube Intersects Rear Wheel2,0.014
 Constraint Violation Rate: Down tube can't reach head tube,0.0
 Constraint Violation Rate: Rear wheel cutout severs seat tube,0.0
 Constraint Violation Rate: Foot intersects front wheel,0.453
@@ -38,7 +38,7 @@ Constraint Violation Rate: Chain stays intersect,0.003
 Constraint Violation Rate: Tube wall thickness exceeds radius,0.0
 Constraint Violation Rate: Down tube intersects front wheel,0.045
 Constraint Violation Rate: Predicted Frame Validity,0.0
-Mean Constraint Violation Magnitude: Planar Safety Factor,1.0851023197174072
+Mean Constraint Violation Magnitude: Planar Safety Factor,1.0851024389266968
 Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.7307774424552917
 Mean Constraint Violation Magnitude: Saddle height too small,39.12799835205078
 Mean Constraint Violation Magnitude: Seat post too short,0.0
@@ -48,7 +48,7 @@ Mean Constraint Violation Magnitude: Strictly postive parameter is negative,0.0
 Mean Constraint Violation Magnitude: Chain stay smaller than rear wheel radius,0.0
 Mean Constraint Violation Magnitude: Chain stay shorter than BB drop,0.0
 Mean Constraint Violation Magnitude: Seat stay smaller than rear wheel radius,
-Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel,0.08990954607725143
+Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel2,0.08990960568189621
 Mean Constraint Violation Magnitude: Down tube can't reach head tube,0.0
 Mean Constraint Violation Magnitude: Rear wheel cutout severs seat tube,
 Mean Constraint Violation Magnitude: Foot intersects front wheel,
@@ -56,5 +56,5 @@ Mean Constraint Violation Magnitude: Crank hits ground in lowest position,3.9375
 Mean Constraint Violation Magnitude: RGB value greater than 255,0.0
 Mean Constraint Violation Magnitude: Chain stays intersect,0.013349998742341995
 Mean Constraint Violation Magnitude: Tube wall thickness exceeds radius,0.0
-Mean Constraint Violation Magnitude: Down tube intersects front wheel,
+Mean Constraint Violation Magnitude: Down tube intersects front wheel,1.1138696670532227
 Mean Constraint Violation Magnitude: Predicted Frame Validity,0.0

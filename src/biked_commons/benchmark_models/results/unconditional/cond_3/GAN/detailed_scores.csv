@@ -1,0 +1,60 @@
+Min Objective Score: Usability Score,0.22301888465881348
+Min Objective Score: Drag Force (N),20.110584259033203
+Min Objective Score: Knee Angle Error (deg.),0.0
+Min Objective Score: Hip Angle Error (deg.),0.0
+Min Objective Score: Arm Angle Error (deg.),0.0
+Min Objective Score: Cosine Distance to Embedding,0.00010499358177185059
+Min Objective Score: Mass (kg),4.281606197357178
+Min Objective Score: Planar Compliance Score,0.0
+Min Objective Score: Transverse Compliance Score,0.17909520864486694
+Min Objective Score: Eccentric Compliance Score,0.24695968627929688
+Mean Objective Score: Usability Score,0.3414618968963623
+Mean Objective Score: Drag Force (N),22.30426025390625
+Mean Objective Score: Knee Angle Error (deg.),7.606863975524902
+Mean Objective Score: Hip Angle Error (deg.),4.494790077209473
+Mean Objective Score: Arm Angle Error (deg.),3.218937635421753
+Mean Objective Score: Cosine Distance to Embedding,0.00035092380130663514
+Mean Objective Score: Mass (kg),8.762807846069336
+Mean Objective Score: Planar Compliance Score,0.08831880241632462
+Mean Objective Score: Transverse Compliance Score,0.3428606390953064
+Mean Objective Score: Eccentric Compliance Score,0.40135207772254944
+Constraint Violation Rate: Planar Safety Factor,0.421
+Constraint Violation Rate: Eccentric Safety Factor,0.484
+Constraint Violation Rate: Saddle height too small,0.0
+Constraint Violation Rate: Seat post too short,0.0
+Constraint Violation Rate: Head tube lower extension longer than head tube,0.0
+Constraint Violation Rate: Head tube upper extension and lower extension overlap,0.0
+Constraint Violation Rate: Strictly postive parameter is negative,0.065
+Constraint Violation Rate: Chain stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Chain stay shorter than BB drop,0.0
+Constraint Violation Rate: Seat stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Seat Tube Intersects Rear Wheel2,0.009
+Constraint Violation Rate: Down tube can't reach head tube,0.0
+Constraint Violation Rate: Rear wheel cutout severs seat tube,0.0
+Constraint Violation Rate: Foot intersects front wheel,0.0
+Constraint Violation Rate: Crank hits ground in lowest position,0.0
+Constraint Violation Rate: RGB value greater than 255,0.0
+Constraint Violation Rate: Chain stays intersect,0.001
+Constraint Violation Rate: Tube wall thickness exceeds radius,0.0
+Constraint Violation Rate: Down tube intersects front wheel,0.0
+Constraint Violation Rate: Predicted Frame Validity,0.0
+Mean Constraint Violation Magnitude: Planar Safety Factor,0.21712753176689148
+Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.15843164920806885
+Mean Constraint Violation Magnitude: Saddle height too small,0.0
+Mean Constraint Violation Magnitude: Seat post too short,0.0
+Mean Constraint Violation Magnitude: Head tube lower extension longer than head tube,0.0
+Mean Constraint Violation Magnitude: Head tube upper extension and lower extension overlap,0.0
+Mean Constraint Violation Magnitude: Strictly postive parameter is negative,0.06763551384210587
+Mean Constraint Violation Magnitude: Chain stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Chain stay shorter than BB drop,0.0
+Mean Constraint Violation Magnitude: Seat stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel2,0.04440094158053398
+Mean Constraint Violation Magnitude: Down tube can't reach head tube,0.0
+Mean Constraint Violation Magnitude: Rear wheel cutout severs seat tube,0.0
+Mean Constraint Violation Magnitude: Foot intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Crank hits ground in lowest position,0.0
+Mean Constraint Violation Magnitude: RGB value greater than 255,0.0
+Mean Constraint Violation Magnitude: Chain stays intersect,0.0017152423970401287
+Mean Constraint Violation Magnitude: Tube wall thickness exceeds radius,0.0
+Mean Constraint Violation Magnitude: Down tube intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Predicted Frame Validity,0.0

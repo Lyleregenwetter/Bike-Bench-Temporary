@@ -6,37 +6,88 @@ import torch
 from biked_commons.data_loading import data_loading
 from biked_commons.resource_utils import resource_path
 
-def sample_riders(num_samples, split = "test", randomize = False):
-    # Sample random riders from the rider data
-    if split == "test":
-        rider_data, _ = data_loading.load_aero_test()
-        rider_data = rider_data[['upper_leg', 'lower_leg', 'arm_length', 'torso_length', 'neck_and_head_length', 'torso_width']]
-    elif split == "train":
-        rider_data, _ = data_loading.load_aero_train()
-        rider_data = rider_data[['upper_leg', 'lower_leg', 'arm_length', 'torso_length', 'neck_and_head_length', 'torso_width']]
-    else:
-        raise ValueError("Invalid split. Choose 'train' or 'test'.")
-    if randomize:
-        sampled_riders = rider_data.sample(n=num_samples, replace=True).values
-    else:
-        rider_data = pd.concat([rider_data] * (num_samples // len(rider_data) + 1), ignore_index=True)
-        sampled_riders = rider_data.iloc[:num_samples].values
-    return torch.tensor(sampled_riders, dtype=torch.float32)
 
-def sample_use_case(num_samples, split=None, randomize = False):    
-    # Randomly pick indices 0, 1 or 2
 
+# 1a) DEVICE cache for later
+_DEVICE_CACHE = {
+    "rider": {},    # maps torch.device -> rider‐tensor‐on‐that‐device
+    "embed": {},
+}
+
+# 1b) Raw CPU tensors (used if you never pass device)
+_riders_train_df, _ = data_loading.load_aero_train()
+_riders_test_df,  _ = data_loading.load_aero_test()
+RIDER_COLS = ['upper_leg','lower_leg','arm_length',
+              'torso_length','neck_and_head_length','torso_width']
+_RIDER_CPU = {
+    "train": torch.tensor(_riders_train_df[RIDER_COLS].values, dtype=torch.float32),
+    "test":  torch.tensor(_riders_test_df[RIDER_COLS].values, dtype=torch.float32),
+}
+
+_, _embed_train = data_loading.load_clip_train()
+_, _embed_test_df  = data_loading.load_clip_test()
+_EMBED_CPU = {
+    "train": torch.tensor(_embed_train, dtype=torch.float32),
+    "test":  torch.tensor(_embed_test_df.values, dtype=torch.float32),
+}
+
+# one‐hot on CPU
+_USECASE_CPU = torch.eye(3, dtype=torch.float32)
+
+def _get_rider_tensor(split: str, device: torch.device = None):
+    if device is None:
+        return _RIDER_CPU[split]
+    cache = _DEVICE_CACHE["rider"]
+    if device not in cache:
+        cache[device] = _RIDER_CPU[split].to(device, non_blocking=True)
+    return cache[device]
+
+def _get_embed_tensor(split: str, device: torch.device = None):
+    if device is None:
+        return _EMBED_CPU[split]
+    cache = _DEVICE_CACHE["embed"]
+    if device not in cache:
+        cache[device] = _EMBED_CPU[split].to(device, non_blocking=True)
+    return cache[device]
+
+def _get_usecase_tensor(device: torch.device = None):
+    if device is None:
+        return _USECASE_CPU
+    # we can reuse the same 3×3 one‐hot everywhere
+    return _USECASE_CPU.to(device, non_blocking=True)
+
+def sample_riders(num_samples: int, split="test",
+                  randomize=False, device: torch.device = None):
+    data = _get_rider_tensor(split, device)
+    N = data.size(0)
     if randomize:
-        # Randomly pick indices 0, 1 or 2
-        idx = np.random.choice(3, size=num_samples, replace=True)
+        idx = torch.randint(0, N, (num_samples,), device=device)
     else:
-        # Repeat the indices 0, 1, 2 until it is long enough
-        idx = np.tile(np.arange(3), num_samples // 3 + 1)[:num_samples]
-    
-    # Convert to one-hot
-    onehots = np.eye(3, dtype=int)[idx]
-    
-    return torch.tensor(onehots, dtype=torch.float32)
+        reps = num_samples // N + 1
+        idx = torch.arange(N, device=device).repeat(reps)[:num_samples]
+    return data[idx]
+
+def sample_image_embedding(num_samples: int, split="test",
+                           randomize=False, device: torch.device = None):
+    data = _get_embed_tensor(split, device)
+    N = data.size(0)
+    if randomize:
+        idx = torch.randint(0, N, (num_samples,), device=device)
+    else:
+        reps = num_samples // N + 1
+        idx = torch.arange(N, device=device).repeat(reps)[:num_samples]
+    return data[idx]
+
+def sample_use_case(num_samples: int, split=None, randomize=False,
+                    device: torch.device = None):
+    onehot = _get_usecase_tensor(device)    # shape (3,3)
+    if randomize:
+        idx = torch.randint(0, 3, (num_samples,), device=device)
+    else:
+        reps = num_samples // 3 + 1
+        idx = torch.arange(3, device=device).repeat(reps)[:num_samples]
+    return onehot[idx]
+
 
 def sample_text(num_samples, split="test", randomize = False):
     # read from .txt data into list of strings, without keeping the newline character
@@ -61,23 +112,3 @@ def sample_text(num_samples, split="test", randomize = False):
 
     
     return sampled_text
-
-def sample_image_embedding(num_samples, split="test", randomize = False):
-    # Sample random riders from the rider data
-    if split == "test":
-        _, embeddings = data_loading.load_clip_test()
-        embeddings = embeddings.values
-    elif split == "train":
-        _, embeddings = data_loading.load_clip_train()
-    else:
-        raise ValueError("Invalid split. Choose 'train' or 'test'.")
-    
-    # Sample random images from the image data
-    if randomize:
-        sampled_indices = np.random.choice(len(embeddings), size=num_samples, replace=True)
-        sampled_images = embeddings[sampled_indices]
-    else:
-        embeddings = np.tile(embeddings, (num_samples // len(embeddings) + 1, 1))
-        sampled_images = embeddings[:num_samples]
-    
-    return torch.tensor(sampled_images, dtype=torch.float32)

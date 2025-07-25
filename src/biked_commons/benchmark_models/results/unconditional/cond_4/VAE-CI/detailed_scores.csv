@@ -1,0 +1,60 @@
+Min Objective Score: Usability Score,0.31004536151885986
+Min Objective Score: Drag Force (N),20.29391860961914
+Min Objective Score: Knee Angle Error (deg.),0.0
+Min Objective Score: Hip Angle Error (deg.),0.0
+Min Objective Score: Arm Angle Error (deg.),0.0
+Min Objective Score: Cosine Distance to Embedding,6.86943531036377e-05
+Min Objective Score: Mass (kg),3.839986562728882
+Min Objective Score: Planar Compliance Score,0.0
+Min Objective Score: Transverse Compliance Score,0.3522261381149292
+Min Objective Score: Eccentric Compliance Score,0.3239416480064392
+Mean Objective Score: Usability Score,0.3777315020561218
+Mean Objective Score: Drag Force (N),21.685997009277344
+Mean Objective Score: Knee Angle Error (deg.),0.0
+Mean Objective Score: Hip Angle Error (deg.),11.69355583190918
+Mean Objective Score: Arm Angle Error (deg.),0.7118996977806091
+Mean Objective Score: Cosine Distance to Embedding,0.00037038527079857886
+Mean Objective Score: Mass (kg),6.268276691436768
+Mean Objective Score: Planar Compliance Score,0.05517232045531273
+Mean Objective Score: Transverse Compliance Score,0.4868338108062744
+Mean Objective Score: Eccentric Compliance Score,0.47988247871398926
+Constraint Violation Rate: Planar Safety Factor,0.14
+Constraint Violation Rate: Eccentric Safety Factor,0.413
+Constraint Violation Rate: Saddle height too small,0.0
+Constraint Violation Rate: Seat post too short,0.0
+Constraint Violation Rate: Head tube lower extension longer than head tube,0.0
+Constraint Violation Rate: Head tube upper extension and lower extension overlap,0.0
+Constraint Violation Rate: Strictly postive parameter is negative,0.13
+Constraint Violation Rate: Chain stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Chain stay shorter than BB drop,0.0
+Constraint Violation Rate: Seat stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Seat Tube Intersects Rear Wheel2,0.272
+Constraint Violation Rate: Down tube can't reach head tube,0.0
+Constraint Violation Rate: Rear wheel cutout severs seat tube,0.0
+Constraint Violation Rate: Foot intersects front wheel,0.0
+Constraint Violation Rate: Crank hits ground in lowest position,0.0
+Constraint Violation Rate: RGB value greater than 255,0.002
+Constraint Violation Rate: Chain stays intersect,0.0
+Constraint Violation Rate: Tube wall thickness exceeds radius,0.0
+Constraint Violation Rate: Down tube intersects front wheel,0.0
+Constraint Violation Rate: Predicted Frame Validity,0.001
+Mean Constraint Violation Magnitude: Planar Safety Factor,0.010703423991799355
+Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.03851330652832985
+Mean Constraint Violation Magnitude: Saddle height too small,0.0
+Mean Constraint Violation Magnitude: Seat post too short,0.0
+Mean Constraint Violation Magnitude: Head tube lower extension longer than head tube,0.0
+Mean Constraint Violation Magnitude: Head tube upper extension and lower extension overlap,0.0
+Mean Constraint Violation Magnitude: Strictly postive parameter is negative,0.1382376253604889
+Mean Constraint Violation Magnitude: Chain stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Chain stay shorter than BB drop,0.0
+Mean Constraint Violation Magnitude: Seat stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel2,3.434211015701294
+Mean Constraint Violation Magnitude: Down tube can't reach head tube,0.0
+Mean Constraint Violation Magnitude: Rear wheel cutout severs seat tube,0.0
+Mean Constraint Violation Magnitude: Foot intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Crank hits ground in lowest position,0.0
+Mean Constraint Violation Magnitude: RGB value greater than 255,0.0499420166015625
+Mean Constraint Violation Magnitude: Chain stays intersect,0.0
+Mean Constraint Violation Magnitude: Tube wall thickness exceeds radius,0.0
+Mean Constraint Violation Magnitude: Down tube intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Predicted Frame Validity,0.0002576389815658331

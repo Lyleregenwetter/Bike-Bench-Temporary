@@ -4,6 +4,9 @@ import pandas as pd
 from biked_commons.design_evaluation.scoring import construct_scorer, MainScores, DetailedScores
 from biked_commons.design_evaluation.design_evaluation import get_standard_evaluations
 from biked_commons.conditioning import conditioning
+from tqdm import trange, tqdm
+
+
 
 def get_condition_by_idx(idx=0):
     rider_condition = conditioning.sample_riders(10, split="test")
@@ -109,3 +112,78 @@ def create_score_report_unconditional():
     all_scores.columns.name = None
     all_scores.index.name = None
     return all_scores
+
+
+def rescore_unconditional(data_columns, device, results_root="results/unconditional"):
+    """
+    Recompute main and detailed scores for all unconditional results.
+    Overwrites only the CSV score files, leaves result_tens.pt untouched.
+    """
+
+    evals = get_standard_evaluations(device)
+    main_scorer     = construct_scorer(MainScores,    evals, data_columns, device)
+    detailed_scorer = construct_scorer(DetailedScores, evals, data_columns, device)
+    device = torch.device(device)
+    for cond_idx in trange(10):
+        cond_dir = os.path.join(results_root, f"cond_{cond_idx}")
+        if not os.path.isdir(cond_dir):
+            continue
+        # fetch the one shared condition for this index
+        condition = get_condition_by_idx(cond_idx)
+
+        for model_name in os.listdir(cond_dir):
+            model_dir = os.path.join(cond_dir, model_name)
+            tensor_path = os.path.join(model_dir, "result_tens.pt")
+            if not os.path.isdir(model_dir) or not os.path.isfile(tensor_path):
+                continue
+
+            # load results
+            result_tens = torch.load(tensor_path, map_location=device)
+
+            # rescore
+            main_scores     = main_scorer(result_tens, condition)
+            detailed_scores = detailed_scorer(result_tens, condition)
+
+            # overwrite only the CSVs
+            main_scores.to_csv(
+                os.path.join(model_dir, "main_scores.csv"), header=False
+            )
+            detailed_scores.to_csv(
+                os.path.join(model_dir, "detailed_scores.csv"), header=False
+            )
+
+
+def rescore_conditional(data_columns, device, results_root="results/conditional"):
+    """
+    Recompute main and detailed scores for all conditional results.
+    Overwrites only the CSV score files, leaves result_tens.pt untouched.
+    """
+    device = torch.device(device)
+    # fetch the full 10k‐point condition set once
+    condition = get_conditions_10k()
+
+    # build scorers
+    evals = get_standard_evaluations(device)
+    main_scorer     = construct_scorer(MainScores,    evals, data_columns, device)
+    detailed_scorer = construct_scorer(DetailedScores, evals, data_columns, device)
+
+    for model_name in tqdm(os.listdir(results_root)):
+        model_dir  = os.path.join(results_root, model_name)
+        tensor_path = os.path.join(model_dir, "result_tens.pt")
+        if not os.path.isdir(model_dir) or not os.path.isfile(tensor_path):
+            continue
+
+        # load results
+        result_tens = torch.load(tensor_path, map_location=device)
+
+        # rescore
+        main_scores     = main_scorer(result_tens, condition)
+        detailed_scores = detailed_scorer(result_tens, condition)
+
+        # overwrite only the CSVs
+        main_scores.to_csv(
+            os.path.join(model_dir, "main_scores.csv"), header=False
+        )
+        detailed_scores.to_csv(
+            os.path.join(model_dir, "detailed_scores.csv"), header=False
+        )

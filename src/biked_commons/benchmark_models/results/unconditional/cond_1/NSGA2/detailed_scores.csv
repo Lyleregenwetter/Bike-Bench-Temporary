@@ -1,23 +1,23 @@
 Min Objective Score: Usability Score,0.0
-Min Objective Score: Drag Force (N),8.588909149169922
+Min Objective Score: Drag Force (N),8.588910102844238
 Min Objective Score: Knee Angle Error (deg.),0.0
 Min Objective Score: Hip Angle Error (deg.),0.0
 Min Objective Score: Arm Angle Error (deg.),0.0
-Min Objective Score: Cosine Distance to Embedding,0.00016245245933532715
-Min Objective Score: Mass (kg),4.358463287353516
+Min Objective Score: Cosine Distance to Embedding,0.00016242265701293945
+Min Objective Score: Mass (kg),4.35846471786499
 Min Objective Score: Planar Compliance Score,0.0
 Min Objective Score: Transverse Compliance Score,0.0
 Min Objective Score: Eccentric Compliance Score,0.0
 Mean Objective Score: Usability Score,0.5682151317596436
 Mean Objective Score: Drag Force (N),16.95015525817871
-Mean Objective Score: Knee Angle Error (deg.),35.420249938964844
-Mean Objective Score: Hip Angle Error (deg.),30.92028045654297
-Mean Objective Score: Arm Angle Error (deg.),30.52056121826172
-Mean Objective Score: Cosine Distance to Embedding,0.0038728839717805386
-Mean Objective Score: Mass (kg),10.977566719055176
-Mean Objective Score: Planar Compliance Score,0.4068579375743866
-Mean Objective Score: Transverse Compliance Score,1.2351850271224976
-Mean Objective Score: Eccentric Compliance Score,0.8892723917961121
+Mean Objective Score: Knee Angle Error (deg.),35.42024612426758
+Mean Objective Score: Hip Angle Error (deg.),30.920276641845703
+Mean Objective Score: Arm Angle Error (deg.),30.520559310913086
+Mean Objective Score: Cosine Distance to Embedding,0.0038728429935872555
+Mean Objective Score: Mass (kg),10.977568626403809
+Mean Objective Score: Planar Compliance Score,0.40685802698135376
+Mean Objective Score: Transverse Compliance Score,1.235185146331787
+Mean Objective Score: Eccentric Compliance Score,0.8892724514007568
 Constraint Violation Rate: Planar Safety Factor,0.0
 Constraint Violation Rate: Eccentric Safety Factor,0.0
 Constraint Violation Rate: Saddle height too small,0.0

@@ -1,0 +1,60 @@
+Min Objective Score: Usability Score,0.19826966524124146
+Min Objective Score: Drag Force (N),21.467660903930664
+Min Objective Score: Knee Angle Error (deg.),0.0
+Min Objective Score: Hip Angle Error (deg.),5.637550354003906
+Min Objective Score: Arm Angle Error (deg.),0.0
+Min Objective Score: Cosine Distance to Embedding,0.0001480579376220703
+Min Objective Score: Mass (kg),3.3628571033477783
+Min Objective Score: Planar Compliance Score,0.0
+Min Objective Score: Transverse Compliance Score,0.397493451833725
+Min Objective Score: Eccentric Compliance Score,0.3534642159938812
+Mean Objective Score: Usability Score,0.25863519310951233
+Mean Objective Score: Drag Force (N),22.644737243652344
+Mean Objective Score: Knee Angle Error (deg.),0.0
+Mean Objective Score: Hip Angle Error (deg.),18.02507972717285
+Mean Objective Score: Arm Angle Error (deg.),0.948866069316864
+Mean Objective Score: Cosine Distance to Embedding,0.0006125399959273636
+Mean Objective Score: Mass (kg),6.451281547546387
+Mean Objective Score: Planar Compliance Score,0.09079371392726898
+Mean Objective Score: Transverse Compliance Score,0.4916253387928009
+Mean Objective Score: Eccentric Compliance Score,0.47791045904159546
+Constraint Violation Rate: Planar Safety Factor,0.409
+Constraint Violation Rate: Eccentric Safety Factor,0.267
+Constraint Violation Rate: Saddle height too small,0.0
+Constraint Violation Rate: Seat post too short,0.106
+Constraint Violation Rate: Head tube lower extension longer than head tube,0.0
+Constraint Violation Rate: Head tube upper extension and lower extension overlap,0.0
+Constraint Violation Rate: Strictly postive parameter is negative,0.236
+Constraint Violation Rate: Chain stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Chain stay shorter than BB drop,0.0
+Constraint Violation Rate: Seat stay smaller than rear wheel radius,0.0
+Constraint Violation Rate: Seat Tube Intersects Rear Wheel2,0.0
+Constraint Violation Rate: Down tube can't reach head tube,0.0
+Constraint Violation Rate: Rear wheel cutout severs seat tube,0.0
+Constraint Violation Rate: Foot intersects front wheel,0.0
+Constraint Violation Rate: Crank hits ground in lowest position,0.0
+Constraint Violation Rate: RGB value greater than 255,0.009
+Constraint Violation Rate: Chain stays intersect,0.0
+Constraint Violation Rate: Tube wall thickness exceeds radius,0.0
+Constraint Violation Rate: Down tube intersects front wheel,0.0
+Constraint Violation Rate: Predicted Frame Validity,0.001
+Mean Constraint Violation Magnitude: Planar Safety Factor,0.0397329144179821
+Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.019228029996156693
+Mean Constraint Violation Magnitude: Saddle height too small,0.0
+Mean Constraint Violation Magnitude: Seat post too short,3.1757256984710693
+Mean Constraint Violation Magnitude: Head tube lower extension longer than head tube,0.0
+Mean Constraint Violation Magnitude: Head tube upper extension and lower extension overlap,0.0
+Mean Constraint Violation Magnitude: Strictly postive parameter is negative,0.568250298500061
+Mean Constraint Violation Magnitude: Chain stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Chain stay shorter than BB drop,0.0
+Mean Constraint Violation Magnitude: Seat stay smaller than rear wheel radius,0.0
+Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel2,0.0
+Mean Constraint Violation Magnitude: Down tube can't reach head tube,0.0
+Mean Constraint Violation Magnitude: Rear wheel cutout severs seat tube,0.0
+Mean Constraint Violation Magnitude: Foot intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Crank hits ground in lowest position,0.0
+Mean Constraint Violation Magnitude: RGB value greater than 255,0.1561645269393921
+Mean Constraint Violation Magnitude: Chain stays intersect,0.0
+Mean Constraint Violation Magnitude: Tube wall thickness exceeds radius,0.0
+Mean Constraint Violation Magnitude: Down tube intersects front wheel,0.0
+Mean Constraint Violation Magnitude: Predicted Frame Validity,1.4217675015970599e-05

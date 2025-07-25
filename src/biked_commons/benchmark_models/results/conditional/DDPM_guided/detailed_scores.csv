@@ -1,0 +1,60 @@
+Min Objective Score: Usability Score,0.19398975372314453
+Min Objective Score: Drag Force (N),15.194135665893555
+Min Objective Score: Knee Angle Error (deg.),0.0
+Min Objective Score: Hip Angle Error (deg.),0.0
+Min Objective Score: Arm Angle Error (deg.),0.0
+Min Objective Score: Cosine Distance to Embedding,4.178285598754883e-05
+Min Objective Score: Mass (kg),2.44800066947937
+Min Objective Score: Planar Compliance Score,0.0
+Min Objective Score: Transverse Compliance Score,0.0
+Min Objective Score: Eccentric Compliance Score,0.05878567695617676
+Mean Objective Score: Usability Score,0.42814409732818604
+Mean Objective Score: Drag Force (N),22.263782501220703
+Mean Objective Score: Knee Angle Error (deg.),13.434769630432129
+Mean Objective Score: Hip Angle Error (deg.),8.124223709106445
+Mean Objective Score: Arm Angle Error (deg.),6.05549955368042
+Mean Objective Score: Cosine Distance to Embedding,0.001093388767912984
+Mean Objective Score: Mass (kg),7.747014045715332
+Mean Objective Score: Planar Compliance Score,0.06920693069696426
+Mean Objective Score: Transverse Compliance Score,0.43531081080436707
+Mean Objective Score: Eccentric Compliance Score,0.4378598630428314
+Constraint Violation Rate: Planar Safety Factor,0.6733
+Constraint Violation Rate: Eccentric Safety Factor,0.6068
+Constraint Violation Rate: Saddle height too small,0.0053
+Constraint Violation Rate: Seat post too short,0.0061
+Constraint Violation Rate: Head tube lower extension longer than head tube,0.0
+Constraint Violation Rate: Head tube upper extension and lower extension overlap,0.004
+Constraint Violation Rate: Strictly postive parameter is negative,0.2192
+Constraint Violation Rate: Chain stay smaller than rear wheel radius,0.0016
+Constraint Violation Rate: Chain stay shorter than BB drop,0.0
+Constraint Violation Rate: Seat stay smaller than rear wheel radius,0.0002
+Constraint Violation Rate: Seat Tube Intersects Rear Wheel2,0.0474
+Constraint Violation Rate: Down tube can't reach head tube,0.0
+Constraint Violation Rate: Rear wheel cutout severs seat tube,0.0
+Constraint Violation Rate: Foot intersects front wheel,0.0728
+Constraint Violation Rate: Crank hits ground in lowest position,0.0
+Constraint Violation Rate: RGB value greater than 255,0.0
+Constraint Violation Rate: Chain stays intersect,0.002
+Constraint Violation Rate: Tube wall thickness exceeds radius,0.051
+Constraint Violation Rate: Down tube intersects front wheel,0.0007
+Constraint Violation Rate: Predicted Frame Validity,0.0007
+Mean Constraint Violation Magnitude: Planar Safety Factor,0.5895016193389893
+Mean Constraint Violation Magnitude: Eccentric Safety Factor,0.3896138072013855
+Mean Constraint Violation Magnitude: Saddle height too small,0.18022102117538452
+Mean Constraint Violation Magnitude: Seat post too short,0.15862326323986053
+Mean Constraint Violation Magnitude: Head tube lower extension longer than head tube,0.0
+Mean Constraint Violation Magnitude: Head tube upper extension and lower extension overlap,0.021420367062091827
+Mean Constraint Violation Magnitude: Strictly postive parameter is negative,0.09110645204782486
+Mean Constraint Violation Magnitude: Chain stay smaller than rear wheel radius,0.013574105687439442
+Mean Constraint Violation Magnitude: Chain stay shorter than BB drop,0.0
+Mean Constraint Violation Magnitude: Seat stay smaller than rear wheel radius,0.004213549662381411
+Mean Constraint Violation Magnitude: Seat Tube Intersects Rear Wheel2,0.5773757100105286
+Mean Constraint Violation Magnitude: Down tube can't reach head tube,0.0
+Mean Constraint Violation Magnitude: Rear wheel cutout severs seat tube,0.0
+Mean Constraint Violation Magnitude: Foot intersects front wheel,800.6475219726562
+Mean Constraint Violation Magnitude: Crank hits ground in lowest position,0.0
+Mean Constraint Violation Magnitude: RGB value greater than 255,0.0
+Mean Constraint Violation Magnitude: Chain stays intersect,0.005064689088612795
+Mean Constraint Violation Magnitude: Tube wall thickness exceeds radius,0.026547351852059364
+Mean Constraint Violation Magnitude: Down tube intersects front wheel,0.013928888365626335
+Mean Constraint Violation Magnitude: Predicted Frame Validity,0.00019254126527812332
