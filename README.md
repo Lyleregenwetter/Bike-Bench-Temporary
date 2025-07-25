@@ -92,9 +92,21 @@ Example of rendered bicycle geometry using the BikeCAD-based rendering backend:
 
 ![Rendered Bike Example](assets/render.png)
 
+# Prepared Content for Author-Reviewer Discussion
+
+### Implementation Details
+
+We have prepared the following overview of the OA-GM training procedure. We will add this to the paper alongside substantiating discussion and derivations
+
+![OAGM Implementation](assets/oagm_implementation.png)
+
+We have prepared the following overview of the LLM querying procedure. We will add this to the paper alongside substantiating discussion.
+
+![LLM Implementation](assets/llm_implementation.png)
+
 ### Implicit Constraint Inference Results
 
-New set of experiments comparing model performance when exposed to all constraints versus performance when exposed to only a subset, forcing models to undertake implicit constraint inference (denoted with postfix -CI):
+We are excited to introduce a new set of experiments comparing model performance when exposed to all constraints versus performance when exposed to only a subset, forcing models to undertake implicit constraint inference (denoted with postfix -CI):
 
 ![Constraint Inference Plots](assets/CI_experiments.png)
 
