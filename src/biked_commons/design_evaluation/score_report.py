@@ -153,14 +153,14 @@ class ScoreReportDashboard:
         self,
         model_name: Optional[str]       = None,
         objectives_per_row: int         = 5,
-        constraints_per_row: int        = 20,
+        constraints_per_row: int        = 36,
         total_width: float              = 12.0,
         summary_cell_height: float      = 0.4,
         objective_cell_height: float    = 1.0,
         truncate_tails_magnitude: float = 0.01,
         filter_invalid: bool            = True,
-        min_kde_samples: int            = 3
-        
+        min_kde_samples: int            = 3,
+        constraint_height_scale: float  = 1.2
     ):
         """Render one model’s scorecard with clipped KDEs and baseline ticks."""
 
@@ -220,7 +220,7 @@ class ScoreReportDashboard:
         con_count = len(self.constraint_names)
         obj_rows  = int(np.ceil(obj_count/objectives_per_row))
         con_rows  = int(np.ceil(con_count/constraints_per_row))
-        cons_cell = total_width/constraints_per_row
+        cons_cell = total_width/constraints_per_row * constraint_height_scale
         fig_h     = summary_cell_height \
                   + obj_rows*objective_cell_height \
                   + con_rows*cons_cell
@@ -400,7 +400,7 @@ class ScoreReportDashboard:
                 fig.add_subplot(gs_obj[r, c]).axis('off')
                 
 
-        # 5) Constraints (unchanged)
+        # 5) Constraints
         gs_con = outer[2].subgridspec(con_rows, constraints_per_row, wspace=0.02)
         white = np.array([1.0,1.0,1.0])
         for idx in range(con_count):
@@ -414,11 +414,13 @@ class ScoreReportDashboard:
 
             arr  = np.stack(list(self.model_const_rates.values()), axis=0)
             rank = int(pd.Series(arr[:,idx])
-                       .rank(method='min',ascending=True)
-                       .iloc[self._model_index(model_name)])
-            ax.text(0.5,0.6,f"{rate:.2f}",ha='center',va='center',fontsize=7)
-            ax.text(0.5,0.2,f"({_ordinal(rank)})",ha='center',va='center',fontsize=6)
-            ax.set_title(f"C{idx+1}",fontsize=9,pad=2)
+                    .rank(method='min',ascending=True)
+                    .iloc[self._model_index(model_name)])
+            
+            # Display as percentage (no decimals)
+            ax.text(0.5, 0.65, f"{rate*100:.0f}%", ha='center', va='center', fontsize=8)
+            ax.text(0.5, 0.22, f"({_ordinal(rank)})", ha='center', va='center', fontsize=7)
+            ax.set_title(f"C{idx+1}", fontsize=9, pad=2)
             ax.set_xticks([]); ax.set_yticks([])
             for loc in ax.spines:
                 ax.spines[loc].set_visible(False)

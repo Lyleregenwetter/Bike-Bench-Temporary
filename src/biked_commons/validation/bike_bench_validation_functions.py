@@ -19,8 +19,7 @@ POSITIVE_COLS = ['CS textfield', 'Stack', 'Head angle',
        'Number of chainrings', 'FIRST color R_RGB',
        'FIRST color G_RGB', 'FIRST color B_RGB', 'SPOKES composite front',
        'SPOKES composite rear', 'SBLADEW front', 'SBLADEW rear',
-       'Saddle length', 'Saddle height', 'Down tube diameter',
-       'Seatpost LENGTH']
+       'Saddle height', 'Down tube diameter', 'Seatpost LENGTH']
 
 class SaddleHeightTooSmall(ValidationFunction):
     def friendly_name(self) -> str:
@@ -33,6 +32,37 @@ class SaddleHeightTooSmall(ValidationFunction):
         saddle_height, seat_tube_length = designs[:, :len(self.variable_names())].T
         return (seat_tube_length + 40) - saddle_height
 
+class SaddleTooShort(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Saddle too short"
+    def variable_names(self) -> List[str]:
+        return ["Saddle length"]
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        saddle_length = designs[:, :len(self.variable_names())].T
+        thresh = 228
+        return thresh - saddle_length
+
+class HeadAngleOverLimit(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Head angle over limit"
+
+    def variable_names(self) -> List[str]:
+        return ["Head angle"]
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        head_angle = designs[:, :len(self.variable_names())].T
+        thresh = 180
+        return head_angle - thresh
+    
+class SeatAngleOverLimit(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Seat angle over limit"
+
+    def variable_names(self) -> List[str]:
+        return ["Seat angle"]
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        seat_angle = designs[:, :len(self.variable_names())].T
+        thresh = 180
+        return seat_angle - thresh
 
 class SeatPostTooShort(ValidationFunction):
     def friendly_name(self) -> str:
@@ -45,18 +75,30 @@ class SeatPostTooShort(ValidationFunction):
         seat_tube_length, seatpost_length, saddle_height = designs[:, :len(self.variable_names())].T
         return saddle_height - (seat_tube_length + seatpost_length + 30) 
 
-
-class HeadTubeLowerExtensionLongerThanHeadTube(ValidationFunction):
+class WheelInnerDiameterTooSmall(ValidationFunction):
     def friendly_name(self) -> str:
-        return "Head tube lower extension longer than head tube"
+        return "Wheel inner diameter too small"
+    def variable_names(self) -> List[str]:
+        return ["Wheel diameter front", "Wheel diameter rear", "RDBSD", "FDBSD"]
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        wheel_diameter_front, wheel_diameter_rear, RDBSD, FDBSD = designs[:, :len(self.variable_names())].T
+        # Calculate the inner diameter for both wheels
+        inner_diameter_front = wheel_diameter_front - (2 * FDBSD)
+        inner_diameter_rear = wheel_diameter_rear - (2 * RDBSD)
+        # Both must be greater than 190.8 (Minimum to avoid intersecting default brake disk)
+        min_inner_diameter = 190.8
+        return min_inner_diameter - torch.minimum(inner_diameter_front, inner_diameter_rear)
+
+class SeatTubeExtensionLongerThanSeatTube(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Seat tube extension longer than seat tube"
 
     def variable_names(self) -> List[str]:
-        return ["Head tube length textfield", "Head tube lower extension2"]
+        return ["Seat tube length", "Seat tube extension2"]
 
     def validate(self, designs: torch.tensor) -> torch.tensor:
-        head_tube_length, head_tube_lower_extension = designs[:, :len(self.variable_names())].T
-        return head_tube_lower_extension - head_tube_length
-
+        seat_tube_length, seat_tube_extension2 = designs[:, :len(self.variable_names())].T
+        return seat_tube_extension2 - seat_tube_length
 
 class HeadTubeUpperExtensionAndLowerExtensionOverlap(ValidationFunction):
     def friendly_name(self) -> str:
@@ -70,16 +112,28 @@ class HeadTubeUpperExtensionAndLowerExtensionOverlap(ValidationFunction):
                                                                                  :len(self.variable_names())].T
         return (head_tube_upper_extension + head_tube_lower_extension) - head_tube_length
 
-
-class StrictlyPositiveParameterIsNegative(ValidationFunction):
+class SeatStayZLongerThanSeatTube(ValidationFunction):
     def friendly_name(self) -> str:
-        return "Strictly postive parameter is negative"
+        return "Seat stay Z longer than seat tube"
+
+    def variable_names(self) -> List[str]:
+        return ["Seat tube length", "SSTopZOFFSET"]
+
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        seat_tube_length, SSZ = designs[:, :len(self.variable_names())].T
+        return SSZ - seat_tube_length
+
+class NonNegativeParameterIsNegative(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Non-negative parameter is negative"
 
     def variable_names(self) -> List[str]:
         return POSITIVE_COLS
 
     def validate(self, designs: torch.tensor) -> torch.tensor:
-        all_clipped = torch.clip(-designs, min=0)    
+
+        negative_mask = designs < 0
+        all_clipped = negative_mask*(-designs)
         return torch.sum(all_clipped, dim=1)
 
 
@@ -265,7 +319,7 @@ class ChainStaysIntersect(ValidationFunction):
         # Extract variables from the DataFrame
         return  ((csd/2) + csbb) - (bbl/2)    
 
-class TubeWallThicknessExceedsRadius(ValidationFunction):
+class TubeWallThicknessExceedsRadius(ValidationFunction): # Excludes seat tube, which has a separate check
     def friendly_name(self) -> str:
         return "Tube wall thickness exceeds radius"
 
@@ -276,7 +330,6 @@ class TubeWallThicknessExceedsRadius(ValidationFunction):
             "csd",                       "Wall thickness Chain stay",
             "ssd",                       "Wall thickness Seat stay",
             "dtd",                       "Wall thickness Down tube",
-            "Seat tube diameter",        "Wall thickness Seat tube",
             "Head tube diameter",        "Wall thickness Head tube",
             "BB diameter",               "Wall thickness Bottom Bracket",
         ]
@@ -291,6 +344,123 @@ class TubeWallThicknessExceedsRadius(ValidationFunction):
         violation  = thickness - (diameters / 2)
         # sum any positives across all tubes
         return torch.sum(torch.clamp(violation, min=0), dim=1)
+    
+class SeatTubeInnerDiameterThinnerThanSeatPostOuterDiameter(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Seat tube inner diameter thinner than seat post outer diameter"
+    def variable_names(self) -> List[str]:
+        return ["Seat tube diameter", "Wall thickness Seat tube"]
+    def validate(self, designs: torch.tensor) -> torch.tensor:
+        seat_tube_diameter, seat_tube_thickness = designs[:, :len(self.variable_names())].T
+        minimum = 27.2 #default seat post outer diameter
+        # Calculate the inner diameter of the seat tube
+        inner_diameter = seat_tube_diameter - 2 * (seat_tube_thickness / 2)
+        # Check if the inner diameter is less than the minimum required diameter
+        return minimum - inner_diameter
+    
+class DownTubeImproperlyJoinsHeadTube(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Down tube improperly joins head tube"
+    def variable_names(self) -> List[str]:
+        return ["Stack", "Head tube length textfield", "Head tube lower extension2", "Head angle", "DT Length", "dtd", "Head tube diameter"]
+    
+    def validate(self, designs: torch.Tensor, penalty_mag = 1e6) -> torch.Tensor:
+        (stack, htl, htlx, head_angle, dt_len, DT_OD, HT_OD) = designs[:, :len(self.variable_names())].T
+        theta_ht = head_angle * math.pi / 180.0  # radians
+
+        DTJY = stack - ((htl-htlx)*torch.sin(theta_ht))
+        DTJX = torch.sqrt(torch.clip((dt_len**2)-(DTJY**2), min=0))
+
+        theta_dt = torch.atan2(DTJY, DTJX)  # angle of down tube junction
+
+        relative_angle = math.pi - (theta_dt + theta_ht)  # angle between down tube junction and head tube 
+
+        #add penalty for angles outside of 0 to pi range
+        below_0_penalty = torch.clip(-relative_angle, min=0) * penalty_mag
+        above_pi_penalty = torch.clip(relative_angle - math.pi, min=0) * penalty_mag
+        #clip relative angle to 1e-6 to pi-1e-6 to avoid division by zero
+        relative_angle = torch.clip(relative_angle, min=1e-6, max=math.pi-1e-6)
+
+        L1 = DT_OD/(2*torch.sin(relative_angle))
+        L2 = HT_OD/(2*torch.tan(relative_angle))
+
+        return L1 + L2 - htlx + below_0_penalty + above_pi_penalty
+
+class TopTubeImproperlyJoinsHeadTube(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Top tube improperly joins head tube"
+    def variable_names(self) -> List[str]:
+        return ["Stack", "Head tube length textfield", "Head tube lower extension2", "Head tube upper extension2", "Seat tube extension2", "Head angle", "Seat angle", "DT Length", "ttd", "Head tube diameter","Seat tube length"]
+    def validate(self, designs: torch.Tensor, penalty_mag = 1e6) -> torch.Tensor:
+        (stack, htl, htlx, htux, stux, head_angle, seat_angle, dt_len, TT_OD, HT_OD, stl) = designs[:, :len(self.variable_names())].T
+        theta_ht = head_angle * math.pi / 180.0
+        theta_st = seat_angle * math.pi / 180.0
+
+        DTJY = stack - ((htl-htlx)*torch.sin(theta_ht))
+        DTJX = torch.sqrt(torch.clip((dt_len**2)-(DTJY**2), min=0))
+
+        TTJX = DTJX - (htl - htlx - htux) * torch.cos(theta_ht)
+        TTJY = stack - htux* torch.sin(theta_ht)
+
+        STJX = (stl - stux) * torch.cos(theta_st)
+        STJY = (stl - stux) * torch.sin(theta_st)
+
+        tt_dy = TTJY - STJY
+        tt_dx = TTJX + STJX
+
+        theta_tt = torch.atan2(tt_dy, tt_dx)  # angle of top tube junction
+        
+        relative_angle = theta_tt + theta_ht  # angle between top tube junction and seat tube
+
+        #add penalty for angles outside of 0 to pi range
+        below_0_penalty = torch.clip(-relative_angle, min=0) * penalty_mag
+        above_pi_penalty = torch.clip(relative_angle - math.pi, min=0) * penalty_mag
+
+        #clip relative angle to 1e-6 to pi-1e-6 to avoid division by zero
+        relative_angle = torch.clip(relative_angle, min=1e-6, max=math.pi-1e-6)
+
+        L1 = TT_OD/(2*torch.sin(relative_angle))
+        L2 = HT_OD/(2*torch.tan(relative_angle))
+        return L1 + L2 - htux + below_0_penalty + above_pi_penalty
+
+class TopTubeImproperlyJoinsSeatTube(ValidationFunction):
+    def friendly_name(self) -> str:
+        return "Top tube improperly joins seat tube"
+    def variable_names(self) -> List[str]:
+        return ["Stack", "Head tube length textfield", "Head tube lower extension2", "Head tube upper extension2", "Seat tube extension2", "Head angle", "Seat angle", "DT Length", "ttd", "Seat tube diameter","Seat tube length"]
+    def validate(self, designs: torch.Tensor, penalty_mag = 1e6) -> torch.Tensor:
+        (stack, htl, htlx, htux, stux, head_angle, seat_angle, dt_len, TT_OD, ST_OD, stl) = designs[:, :len(self.variable_names())].T
+        theta_ht = head_angle * math.pi / 180.0
+        theta_st = seat_angle * math.pi / 180.0
+
+        DTJY = stack - ((htl-htlx)*torch.sin(theta_ht))
+        DTJX = torch.sqrt(torch.clip((dt_len**2)-(DTJY**2), min=0))
+
+        TTJX = DTJX - (htl - htlx - htux) * torch.cos(theta_ht)
+        TTJY = stack - htux* torch.sin(theta_ht)
+
+        STJX = (stl - stux) * torch.cos(theta_st)
+        STJY = (stl - stux) * torch.sin(theta_st)
+
+        tt_dy = TTJY - STJY
+        tt_dx = TTJX + STJX
+
+        theta_tt = torch.atan2(tt_dy, tt_dx)  # angle of top tube junction
+        
+        relative_angle = math.pi - (theta_tt + theta_st)  # angle between top tube junction and seat tube
+
+        #add penalty for angles outside of 0 to pi range
+        below_0_penalty = torch.clip(-relative_angle, min=0) * penalty_mag
+        above_pi_penalty = torch.clip(relative_angle - math.pi, min=0) * penalty_mag
+        
+        #clip relative angle to 1e-6 to pi-1e-6 to avoid division by zero
+        relative_angle = torch.clip(relative_angle, min=1e-6, max=math.pi-1e-6)
+
+        L1 = TT_OD/(2*torch.sin(relative_angle))
+        L2 = ST_OD/(2*torch.tan(relative_angle))
+
+        seatpost_clamp_default_offset = 12 #from BikeCAD
+        return L1 + L2 - stux + below_0_penalty + above_pi_penalty + seatpost_clamp_default_offset
 
 class DownTubeIntersectsFrontWheel(ValidationFunction):
     def friendly_name(self) -> str:
@@ -337,10 +507,15 @@ class DownTubeIntersectsFrontWheel(ValidationFunction):
 
 bike_bench_validation_functions: List[ValidationFunction] = [
     SaddleHeightTooSmall(),
+    SaddleTooShort(),
+    HeadAngleOverLimit(),
+    SeatAngleOverLimit(),
     SeatPostTooShort(),
-    HeadTubeLowerExtensionLongerThanHeadTube(),
+    WheelInnerDiameterTooSmall(),
+    SeatTubeExtensionLongerThanSeatTube(),
     HeadTubeUpperExtensionAndLowerExtensionOverlap(),
-    StrictlyPositiveParameterIsNegative(),
+    SeatStayZLongerThanSeatTube(),
+    NonNegativeParameterIsNegative(),
     ChainStaySmallerThanRearWheelRadius(),
     ChainStayShorterThanBBDrop(),
     SeatStaySmallerThanRearWheelRadius(),
@@ -352,13 +527,19 @@ bike_bench_validation_functions: List[ValidationFunction] = [
     RGBvalueGreaterThan255(),
     ChainStaysIntersect(),
     TubeWallThicknessExceedsRadius(),
+    SeatTubeInnerDiameterThinnerThanSeatPostOuterDiameter(),
+    DownTubeImproperlyJoinsHeadTube(),
+    TopTubeImproperlyJoinsHeadTube(),
+    TopTubeImproperlyJoinsSeatTube(),
     DownTubeIntersectsFrontWheel(),
 ]
 
 difficult_validation_functions: List[ValidationFunction] = [
     # SaddleHeightTooSmall(),
+    # SaddleTooShort(),
     # SeatPostTooShort(),
-    # HeadTubeLowerExtensionLongerThanHeadTube(),
+    # WheelInnerDiameterTooSmall(),
+    # SeatTubeExtensionLongerThanSeatTube(),
     # HeadTubeUpperExtensionAndLowerExtensionOverlap(),
     # StrictlyPositiveParameterIsNegative(),
     # ChainStaySmallerThanRearWheelRadius(),
@@ -372,5 +553,9 @@ difficult_validation_functions: List[ValidationFunction] = [
     # RGBvalueGreaterThan255(),
     # ChainStaysIntersect(),
     TubeWallThicknessExceedsRadius(),
+    SeatTubeInnerDiameterThinnerThanSeatPostOuterDiameter(), 
+    DownTubeImproperlyJoinsHeadTube(),
+    # TopTubeImproperlyJoinsHeadTube(),
+    TopTubeImproperlyJoinsSeatTube(),
     # DownTubeIntersectsFrontWheel(),
 ]

@@ -265,8 +265,11 @@ class ValidationEvaluator(EvaluationFunction):
         return predictions
 
 class ErgonomicsEvaluator(EvaluationFunction):
-    def __init__(self, device="cpu", dtype=torch.float32):
+    def __init__(self, penalize_constraints = False, constraints_only = False, device="cpu", dtype=torch.float32):
         super().__init__(device, dtype)
+        self.penalize_constraints = penalize_constraints
+        self.constraints_only = constraints_only
+
     def variable_names(self) -> List[str]:
         return [
             "Stack",
@@ -276,10 +279,23 @@ class ErgonomicsEvaluator(EvaluationFunction):
         ]
 
     def return_names(self) -> List[str]:
-        return ['Knee Angle Error (deg.)', 'Hip Angle Error (deg.)', "Arm Angle Error (deg.)"]
+        if self.penalize_constraints:
+            return ['Knee Angle Error (deg.)', 'Hip Angle Error (deg.)', "Arm Angle Error (deg.)"]
+        elif self.constraints_only:
+            return ["Arm Too Long for Bike", "Saddle Too Far From Handle", "Torso Too Long for Bike",
+                    "Saddle Too Far From Crank", "Upper Leg Too Long for Bike", "Lower Leg Too Long for Bike"]
+        else:
+            return ['Knee Angle Error (deg.)', 'Hip Angle Error (deg.)', "Arm Angle Error (deg.)", 
+                    "Arm Too Long for Bike", "Saddle Too Far From Handle", "Torso Too Long for Bike",
+                    "Saddle Too Far From Crank", "Upper Leg Too Long for Bike", "Lower Leg Too Long for Bike"]
     
     def return_types(self) -> List[str]:
-        return [1, 1, 1]
+        if self.penalize_constraints:
+            return [1, 1, 1]
+        elif self.constraints_only:
+            return [0, 0, 0, 0, 0, 0]
+        else:
+            return [1, 1, 1, 0, 0, 0, 0, 0, 0]
 
     def evaluate(self, designs: torch.Tensor, conditioning: dict = {}) -> torch.Tensor:
         assert "Rider" in conditioning, "Rider dimensions must be provided in conditioning to calculate ergonomics."
@@ -288,6 +304,10 @@ class ErgonomicsEvaluator(EvaluationFunction):
             rider_dims = rider_dims.unsqueeze(0).expand(designs.shape[0], -1)
 
         rider_dims = rider_dims.to(self.device, dtype=self.dtype)
+
+        if self.constraints_only:
+            predictions = joint_angles.constraints(interface_points.calculate_interface_points(designs), rider_dims)
+            return predictions
 
         assert "Use Case" in conditioning, "Use Case must be provided in conditioning to calculate ergonomics."
         use_case = conditioning["Use Case"]
@@ -331,7 +351,10 @@ class ErgonomicsEvaluator(EvaluationFunction):
         use_case_list = [index_to_label[idx] for idx in use_case.argmax(axis=1)]
 
         int_pts = interface_points.calculate_interface_points(designs)
-        predictions = joint_angles.dist_to_1SD(int_pts, rider_dims, use_case_list)
+        predictions = joint_angles.dist_to_1SD(int_pts, rider_dims, use_case_list, self.penalize_constraints)
+        if not self.penalize_constraints:
+            constraint_violation = joint_angles.constraints(int_pts, rider_dims)
+            predictions = torch.cat((predictions, constraint_violation), dim=1)
         return predictions
 
 
@@ -489,7 +512,7 @@ def get_standard_evaluations(device, aesthetics_mode = "Embedding") -> List[Eval
     StandardEvaluations = [
         UsabilityEvaluator(device=device),
         AeroEvaluator(device=device),
-        ErgonomicsEvaluator(device=device),
+        ErgonomicsEvaluator(device=device, penalize_constraints=False, constraints_only=False),
         AestheticsEvaluator(mode=aesthetics_mode, batch_size=64, device=device),
         StructuralEvaluator(device=device),
         ValidationEvaluator(device=device),
